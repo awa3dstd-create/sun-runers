@@ -44,3 +44,30 @@ Stage Summary:
 - API de contacto operativa con asignación automática de ingeniero por proximidad
 - Guía de implementación Cloudflare entregada en /home/z/my-project/download/HELORA-GUIA-IMPLEMENTACION.md
 - Pendiente (con usuario): configurar Cloudflare account, WhatsApp Business API, fotos reales de ingenieros y trabajos
+
+---
+Task ID: 10
+Agent: main (Super Z)
+Task: Integrar Brevo para email transaccional sin dominio propio + mostrar código completo
+
+Work Log:
+- Aclarada la diferencia Resend (requiere dominio) vs Brevo (admite Gmail verificado)
+- Creado src/lib/brevo.ts con función sendEmail() vía API v3 de Brevo
+- Creado src/lib/email-templates.ts con dos plantillas HTML:
+  - buildClientConfirmationEmail (cliente cálido, con CTA WhatsApp)
+  - buildEngineerNotificationEmail (interna al ingeniero, con todos los datos)
+- Actualizado src/app/api/contact/route.ts: ahora envía 3 emails por solicitud
+  (cliente + ingeniero asignado + copia al email central) y registra logs
+- Creado src/app/api/health/route.ts para diagnóstico de configuración
+- Creado .env.example con todas las variables documentadas
+- Actualizada /download/HELORA-GUIA-IMPLEMENTACION.md con sección 3 Brevo completa:
+  comparativa, setup paso a paso, flujo de emails, troubleshooting, migración futura
+- Probado endpoint /api/health: reporta correctamente que Brevo no está configurado
+- Probado endpoint /api/contact: persiste solicitud + registra log email_skipped
+
+Stage Summary:
+- Brevo integrado y listo para usar
+- Usuario solo necesita pegar su BREVO_API_KEY en .env.local
+- Plantillas HTML profesionales cálido con branding HELORA
+- Sistema de logs completo para auditoría y diagnóstico
+- Guía actualizada con setup paso a paso

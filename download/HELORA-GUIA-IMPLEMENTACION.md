@@ -124,17 +124,22 @@ export const db = new PrismaClient({
 
 ### 2.4 Variables de entorno
 
-Configurar en el dashboard de Cloudflare Pages (Settings → Environment variables):
+Configurar en `.env.local` (desarrollo) y en el dashboard de Cloudflare Pages (producción):
 
 | Variable | Descripción | Ejemplo |
 |---|---|---|
-| `DATABASE_URL` | URL de D1 | `prisma://...` |
-| `WHATSAPP_TOKEN` | Token de WhatsApp Business API | `EAAG...` |
-| `WHATSAPP_PHONE_NUMBER_ID` | ID del número de WhatsApp Business | `123456789` |
-| `EMAIL_API_KEY` | API key de Resend/SendGrid | `re_...` |
-| `EMAIL_FROM` | Email remitente | `contacto@helora.cu` |
-| `NEXT_PUBLIC_SITE_URL` | URL pública del sitio | `https://helora.cu` |
+| `DATABASE_URL` | URL de base de datos | `file:./db/custom.db` (dev) / `prisma://...` (D1 prod) |
+| `BREVO_API_KEY` | API key de Brevo | `xkeysib-...` |
+| `BREVO_FROM_EMAIL` | Email remitente verificado en Brevo | `helora.cuba@gmail.com` |
+| `BREVO_FROM_NAME` | Nombre remitente | `HELORA` |
+| `BREVO_NOTIFY_EMAIL` | Email central que recibe copia interna | `helora.cuba@gmail.com` |
+| `WHATSAPP_PUBLIC_NUMBER` | WhatsApp público para clientes | `+5351234567` |
+| `NEXT_PUBLIC_SITE_URL` | URL pública del sitio | `http://localhost:3000` (dev) / `https://helora.cu` (prod) |
 | `GEOCODING_API_KEY` | API key de geocoding (opcional) | (Nominatim/Google) |
+| `WHATSAPP_TOKEN` | Token de WhatsApp Business API (futuro) | `EAAG...` |
+| `WHATSAPP_PHONE_NUMBER_ID` | ID de WhatsApp Business (futuro) | `123456789` |
+
+Ver `.env.example` en la raíz del proyecto como plantilla.
 
 ### 2.5 Despliegue
 
@@ -145,9 +150,127 @@ wrangler pages deploy .next/standalone
 
 ---
 
-## 3. Capa de automatización
+## 3. Email transaccional con Brevo
 
-### 3.1 Arquitectura propuesta
+### 3.1 ¿Por qué Brevo y no Resend?
+
+| Servicio | Plan free | Dominio propio | Envío hacia Gmail |
+|---|---|---|---|
+| **Resend** | 3000/mes | **Requerido** | Solo desde dominio verificado |
+| **Brevo** | 300/día (9000/mes) | **No requerido** | Sí, desde Gmail verificado |
+| Mailgun | 100/día | Requerido tras 1er mes | Sí |
+| Elastic Email | 100/día | No requerido | Sí |
+
+Para la fase actual de HELORA **sin dominio propio**, **Brevo** es la mejor opción porque permite enviar desde un Gmail personal verificado hacia cualquier destinatario Gmail. Cuando la empresa tenga dominio `helora.cu`, se puede migrar a Resend (mayor cuota y mejor deliverability con dominio propio).
+
+### 3.2 Configurar Brevo paso a paso
+
+1. **Crear cuenta**: ir a https://www.brevo.com → *Sign up free*
+2. **Completar perfil**: nombre, país (Cuba no está — seleccionar España, México o USA)
+3. **Verificar email remitente**:
+   - Ir a *Senders & IP* → *Senders* → *Add a new sender*
+   - Email: `helora.cuba@gmail.com` (tu Gmail personal o dedicado)
+   - Name: `HELORA`
+   - Brevo enviará un email de verificación a esa dirección
+   - Abrir el email y hacer clic en "Verify"
+4. **Generar API key**:
+   - Ir a *Settings* → *API Keys* → *Generate API key*
+   - Nombre: `HELORA Web`
+   - Permisos: *Sending* (solo enviar)
+   - Copiar la key (empieza con `xkeysib-`)
+5. **Pegar API key en `.env.local`**:
+   ```bash
+   BREVO_API_KEY=xkeysib-xxxxxxxxxxxxxxxxxxxx
+   BREVO_FROM_EMAIL=helora.cuba@gmail.com
+   BREVO_FROM_NAME=HELORA
+   BREVO_NOTIFY_EMAIL=helora.cuba@gmail.com
+   WHATSAPP_PUBLIC_NUMBER=+5351234567
+   ```
+6. **Verificar configuración**:
+   ```bash
+   curl http://localhost:3000/api/health
+   ```
+   Debe responder:
+   ```json
+   {
+     "hasApiKey": true,
+     "fromEmail": "helora.cuba@gmail.com",
+     "fromName": "HELORA",
+     "notifyEmail": "helora.cuba@gmail.com",
+     "whatsappPublic": "+5351234567",
+     "allConfigured": true
+   }
+   ```
+
+### 3.3 Flujo de emails automático
+
+Cuando un cliente envía el formulario de contacto, el endpoint `/api/contact` ejecuta:
+
+```
+1. Persistir solicitud en DB (status='nuevo')
+       │
+2. Calcular ingeniero más cercano por proximidad
+       │
+3. Enviar email al CLIENTE (confirmación cálido)
+   - Asunto: "HELORA — Recibimos tu solicitud"
+   - Contenido: confirmación + zona asignada + CTA WhatsApp
+   - Tags: ["contacto-cliente", "<servicio>"]
+       │
+4. Enviar email al INGENIERO ASIGNADO (notificación interna)
+   - Asunto: "[HELORA] Nueva solicitud #ABC12345 — fotovoltaico"
+   - Contenido: todos los datos del cliente + mensaje
+   - Tags: ["notificacion-interna", "ing-X"]
+       │
+5. Enviar COPIA al email central de la compañía
+   - Asunto: "[COPIA] [HELORA] Nueva solicitud #..."
+   - Mismo contenido que el email del ingeniero
+       │
+6. Actualizar status='notificado' y emailSent=true
+       │
+7. Registrar AutomationLog por cada acción
+```
+
+### 3.4 Plantillas de email
+
+Dos plantillas HTML embebidas en `src/lib/email-templates.ts`:
+
+- **`buildClientConfirmationEmail`**: email cálido al cliente con logo HELORA, bloque "Qué sigue", CTA WhatsApp
+- **`buildEngineerNotificationEmail`**: email interno con tabla de datos del cliente, mensaje destacado, link directo a `mailto:` y `tel:`
+
+Ambas usan HTML tabular con estilos inline (estándar para email transaccional — Gmail/Outlook no soportan CSS moderno).
+
+### 3.5 Diagnóstico y troubleshooting
+
+**Problema**: "Los emails no llegan"
+1. Verificar `/api/health` → `allConfigured: true`
+2. Revisar logs en DB: `SELECT * FROM AutomationLog ORDER BY createdAt DESC LIMIT 20`
+3. Revisar el dashboard de Brevo → *Transactional* → *Logs* para ver si Brevo recibió la solicitud
+4. Verificar que el email remitente esté verificado en Brevo (no solo agregado, sino verificado con el click del email de confirmación)
+5. Revisar carpeta Spam del destinatario (los primeros envíos desde Gmail vía Brevo pueden ir a spam hasta que se establezca reputación)
+
+**Problema**: "Brevo responde 401 Unauthorized"
+- La API key es incorrecta o expiró. Regenerarla en Brevo → *API Keys*.
+
+**Problema**: "Brevo responde 400 con 'sender not allowed'"
+- El email remitente (`BREVO_FROM_EMAIL`) no está verificado en Brevo. Repetir el paso 3.3.
+
+**Problema**: "Límite de 300 emails/día excedido"
+- Brevo free tier permite 300/día. Para HELORA esto es suficiente (más de 300 solicitudes/día requeriría plan pago). Si se excede, Brevo pausa el envío hasta el día siguiente — las solicitudes quedan persistidas en DB con `emailSent=false` y se pueden procesar manualmente o con un Worker de reintentos.
+
+### 3.6 Migración futura a Resend (cuando tengas dominio)
+
+Cuando HELORA tenga dominio propio (`helora.cu`):
+
+1. Migrar a Resend — mayor cuota (3000/mes) y mejor deliverability
+2. Configurar registros DNS (SPF, DKIM, DMARC)
+3. Cambiar `src/lib/brevo.ts` por `src/lib/resend.ts` (la API es similar)
+4. Actualizar variables de entorno: `RESEND_API_KEY`, `EMAIL_FROM=contacto@helora.cu`
+
+---
+
+## 4. Capa de automatización (futura — WhatsApp + Workers)
+
+### 4.1 Arquitectura propuesta
 
 ```
 Cliente envía formulario
@@ -176,7 +299,7 @@ Cliente envía formulario
               └───────────────────────────┘
 ```
 
-### 3.2 Worker de automatización
+### 4.2 Worker de automatización
 
 Crear `workers/automation/index.ts`:
 
@@ -329,7 +452,7 @@ database_id = "<id>"
 INTERNAL_SECRET = "genera-un-secreto-largo"
 ```
 
-### 3.3 WhatsApp Business API
+### 4.3 WhatsApp Business API
 
 Pasos para conectar WhatsApp Business:
 
@@ -346,7 +469,9 @@ Pasos para conectar WhatsApp Business:
    - `WHATSAPP_TOKEN` — token de acceso a la API
    - `WHATSAPP_PHONE_NUMBER_ID` — ID del número de teléfono
 
-### 3.4 Email transaccional
+### 4.4 Email transaccional
+
+⚠️ **Ya implementado con Brevo** — ver sección 3 arriba. El Worker futuro solo necesitaría manejar los reintentos y los casos donde `emailSent=false` (por ejemplo, si Brevo estuvo caído).
 
 Recomendación: **Resend** (https://resend.com) — 3000 emails/mes gratis, API simple.
 
@@ -359,11 +484,11 @@ Alternativas: SendGrid, Mailgun, Postmark, Amazon SES.
 
 ---
 
-## 4. Geocoding real (mejora opcional)
+## 5. Geocoding real (mejora opcional)
 
 Actualmente el algoritmo de proximidad infiere coordenadas del cliente desde el texto de la dirección (matching por municipio/provincia). Para mayor precisión:
 
-### 4.1 Nominatim (gratuito, OpenStreetMap)
+### 5.1 Nominatim (gratuito, OpenStreetMap)
 
 ```typescript
 async function geocode(address: string): Promise<{lat:number, lng:number} | null> {
@@ -374,7 +499,7 @@ async function geocode(address: string): Promise<{lat:number, lng:number} | null
 }
 ```
 
-### 4.2 Google Maps Geocoding API (de pago, más preciso)
+### 5.2 Google Maps Geocoding API (de pago, más preciso)
 
 ```typescript
 async function geocode(address: string, apiKey: string) {
@@ -398,11 +523,11 @@ const assignment = assignNearestEngineer(body.address, coords?.lat, coords?.lng)
 
 ---
 
-## 5. Agentes IA / MCP (futuro)
+## 6. Agentes IA / MCP (futuro)
 
 Cuando quieras añadir IA al flujo, dos arquitecturas posibles:
 
-### 5.1 Cloudflare Workers AI (recomendado, serverless)
+### 6.1 Cloudflare Workers AI (recomendado, serverless)
 
 Cloudflare tiene modelos LLM ejecutándose en su edge network. Para crear un agente que:
 
@@ -439,7 +564,7 @@ export default {
 }
 ```
 
-### 5.2 MCP (Model Context Protocol)
+### 6.2 MCP (Model Context Protocol)
 
 Si quieres usar un LLM externo (GPT-5, Claude) con herramientas (MCP tools) que pueda:
 
@@ -502,9 +627,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
 ---
 
-## 6. Pasos recomendados para implementación
+## 7. Pasos recomendados para implementación
 
 ### Fase 1 — Despliegue (1-2 días)
+- [ ] Configurar variables en `.env.local` (ver `.env.example`)
+- [ ] Crear cuenta de Brevo y verificar Gmail remitente
+- [ ] Probar el flujo completo de contacto
 - [ ] Comprar dominio `helora.cu` (o `.com` si no disponible)
 - [ ] Conectar repo a Cloudflare Pages
 - [ ] Configurar variables de entorno
@@ -540,7 +668,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
 ---
 
-## 7. Mantenimiento del sitio
+## 8. Mantenimiento del sitio
 
 ### Actualizar ingenieros
 
@@ -573,7 +701,7 @@ Editar `SERVICES` en `src/lib/site-data.ts`.
 
 ---
 
-## 8. Contacto y soporte
+## 9. Contacto y soporte
 
 Este documento acompaña al código fuente entregado. Para futuras iteraciones:
 
