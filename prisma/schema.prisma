@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────────────────
+// HELORA — modelos de datos
+// ──────────────────────────────────────────────────────────
+
+/**
+ * Solicitud de contacto recibida desde el formulario público.
+ *
+ * Esta tabla es la fuente de consumo para la automatización
+ * futura (Cloudflare Worker + WhatsApp Business API + Email).
+ *
+ * El campo `assignedEngineerId` se llena en servidor usando
+ * el algoritmo de proximidad (ver src/lib/engineer-assignment.ts).
+ *
+ * El campo `status` permite que la automatización marque el
+ * progreso: nuevo → notificado → en_atención → cerrado.
+ */
+model ContactRequest {
+  id              String   @id @default(cuid())
+  // Datos del cliente
+  name            String
+  email           String
+  phone           String
+  address         String
+  // Coordenadas opcionales (geocoding futuro)
+  lat             Float?
+  lng             Float?
+  // Tipo de servicio solicitado
+  service         String
+  message         String
+  preferredChannel String  @default("whatsapp")
+  // Asignación interna (no se expone al cliente)
+  assignedEngineerId String?
+  assignedZone       String?
+  // Estado del flujo de automatización
+  status          String   @default("nuevo") // nuevo | notificado | en_atencion | cerrado
+  // Trazabilidad
+  whatsappSent    Boolean  @default(false)
+  emailSent       Boolean  @default(false)
+  internalNotes   String?
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([assignedEngineerId])
+  @@index([createdAt])
+}
+
+/**
+ * Log de auditoría de la automatización.
+ * Cada acción que ejecuta un worker/agent queda registrada aquí.
+ */
+model AutomationLog {
+  id          String   @id @default(cuid())
+  requestId   String
+  action      String   // assigned | whatsapp_sent | email_sent | status_changed
+  detail      String?
+  success     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+}

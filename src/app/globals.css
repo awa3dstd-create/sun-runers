@@ -1,0 +1,218 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ────────────────────────────────────────────────────────────
+   HELORA — Sistema de diseño
+   Estética: minimalismo editorial cálido.
+   Inspiración: Apple, Linear, Vercel, Bloomberg, oficinas de
+   arquitectura (Annex, BIG). Mucho aire, jerarquía tipográfica
+   fuerte, una sola tibia warm accent.
+   ──────────────────────────────────────────────────────────── */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Paleta cálido-minimalista */
+  --background: #F7F5EF;          /* off-white warm */
+  --foreground: #0F100C;          /* near-black warm */
+  --card: #FFFFFF;
+  --card-foreground: #0F100C;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F100C;
+  --primary: #0F100C;             /* near-black para CTAs */
+  --primary-foreground: #F7F5EF;
+  --secondary: #ECE7DA;
+  --secondary-foreground: #0F100C;
+  --muted: #ECE7DA;
+  --muted-foreground: #6A655A;
+  --accent: #B8702E;              /* amber warm — único acento */
+  --accent-foreground: #FFFFFF;
+  --destructive: #B23A3A;
+  --border: #DDD6C5;
+  --input: #DDD6C5;
+  --ring: #B8702E;
+  --chart-1: #B8702E;
+  --chart-2: #6A655A;
+  --chart-3: #0F100C;
+  --chart-4: #C8A878;
+  --chart-5: #8A5A2A;
+  --sidebar: #F7F5EF;
+  --sidebar-foreground: #0F100C;
+  --sidebar-primary: #0F100C;
+  --sidebar-primary-foreground: #F7F5EF;
+  --sidebar-accent: #ECE7DA;
+  --sidebar-accent-foreground: #0F100C;
+  --sidebar-border: #DDD6C5;
+  --sidebar-ring: #B8702E;
+}
+
+.dark {
+  --background: #0F100C;
+  --foreground: #F7F5EF;
+  --card: #1A1B17;
+  --card-foreground: #F7F5EF;
+  --popover: #1A1B17;
+  --popover-foreground: #F7F5EF;
+  --primary: #F7F5EF;
+  --primary-foreground: #0F100C;
+  --secondary: #2A2B25;
+  --secondary-foreground: #F7F5EF;
+  --muted: #2A2B25;
+  --muted-foreground: #A8A395;
+  --accent: #D89148;
+  --accent-foreground: #0F100C;
+  --destructive: #E25555;
+  --border: #2F3128;
+  --input: #2F3128;
+  --ring: #D89148;
+  --chart-1: #D89148;
+  --chart-2: #A8A395;
+  --chart-3: #F7F5EF;
+  --chart-4: #C8A878;
+  --chart-5: #8A5A2A;
+  --sidebar: #1A1B17;
+  --sidebar-foreground: #F7F5EF;
+  --sidebar-primary: #F7F5EF;
+  --sidebar-primary-foreground: #0F100C;
+  --sidebar-accent: #2A2B25;
+  --sidebar-accent-foreground: #F7F5EF;
+  --sidebar-border: #2F3128;
+  --sidebar-ring: #D89148;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+/* Tipografía display: jerarquía editorial fuerte */
+@layer components {
+  .display-1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    font-weight: 500;
+  }
+  .display-2 {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+  }
+  .display-3 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .prose-body {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+  }
+}
+
+/* Scrollbar minimalista */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+  border: 2px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Animación sutil de aparición */
+@keyframes helora-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: helora-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Grid sutil de fondo (líneas hairline) */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: -1px -1px;
+  opacity: 0.35;
+}
