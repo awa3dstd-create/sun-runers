@@ -274,3 +274,47 @@ Stage Summary:
 - URL pública final: https://sun-runners.pages.dev con todas las imágenes cargando correctamente
 - Script build-standalone-html.py queda persistido y arreglado para futuras regeneraciones
 - Pendiente (con usuario): cuando el usuario tenga sus fotos reales de trabajos/instalaciones, las reemplazo en public/assets/portfolio/p1.jpg ... p6.jpg y hero.jpg, regenero el standalone y redeployo
+
+---
+Task ID: 15
+Agent: main (Super Z)
+Task: Arreglar contraste del header — logo y botón de menú se perdían al hacer scroll sobre ciertas secciones
+
+Work Log:
+- Diagnosticado: el Header tenía dos estados:
+  • No scrolled (scrollY ≤ 24px): bg-transparent text-background (texto blanco, transparente)
+  • Scrolled (>24px): bg-background/85 backdrop-blur-xl text-foreground (fondo off-white 85% opacidad, texto negro)
+- Problema identificado: el fondo translúcido al 85% dejaba pasar el color de las secciones oscuras
+  (especialmente Tecnologías con bg-foreground #0F100C) y el logo/botones negros se confundían
+- Mapeado de secciones y sus fondos:
+  • Hero (inicio): bg-foreground (oscuro) — texto blanco funciona
+  • Servicios: bg-background (claro) — texto negro funciona
+  • Tecnologías: bg-foreground (oscuro) — texto negro NO se veía con fondo translúcido
+  • Trabajos: bg-background (claro) — texto negro funciona
+  • Conócenos: bg-background (claro) — texto negro funciona
+  • Contacto: bg-background (claro) — texto negro funciona
+- Cambios en src/components/site/Header.tsx:
+  • Trigger de scroll bajado de 24px → 8px (reacciona más rápido)
+  • Fondo scrolled cambiado de bg-background/85 backdrop-blur-xl → bg-background (sólido 100%)
+  • Agregado shadow-sm para definir mejor el borde inferior
+- BUG ADICIONAL DETECTADO Y ARREGLADO:
+  • El HTML standalone eliminó los scripts de Next.js, así que la lógica de scroll del Header
+    no funcionaba — el header quedaba SIEMPRE en estado "no scrolled" (transparente + texto blanco)
+  • Solución: agregado bloque CSS + JS mínimo en build-standalone-html.py:
+    - CSS: reglas con !important que sobreescriben colores cuando header tiene clase `header-scrolled`
+    - JS: toggle de clase `header-scrolled` según window.scrollY > 8
+    - Reglas cubren: header bg/color, nav links color, botón "Solicitar cotización", botón hamburguesa móvil
+- Regenerado HTML standalone y deployado a Cloudflare Pages
+- Verificación visual con agent-browser + VLM en 4 posiciones de scroll:
+  • Top (Hero oscuro): logo y nav blancos, excelente contraste ✓
+  • Servicios (claro): logo y nav negros sobre fondo blanco sólido ✓
+  • Tecnologías (oscuro): logo y nav negros sobre fondo blanco sólido del header ✓ (ANTES se perdía)
+  • Trabajos (claro): logo y nav negros sobre fondo blanco sólido ✓
+- Verificación mobile: logo se ve claramente en top y scrolled ✓
+
+Stage Summary:
+- Header ahora tiene fondo sólido (off-white #F7F5EF) al hacer scroll, garantizando contraste en TODAS las secciones
+- Trigger de scroll más sensible (8px en vez de 24px) para reacción inmediata
+- Sombra sutil agregada para definir el borde inferior del header
+- Lógica de scroll restaurada en HTML standalone vía CSS+JS mínimo (los scripts de Next.js se eliminan del standalone)
+- URL pública: https://sun-runners.pages.dev — header verificado visualmente en 4 posiciones diferentes

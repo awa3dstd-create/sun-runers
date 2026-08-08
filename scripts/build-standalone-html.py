@@ -151,6 +151,66 @@ def main():
     # 6. Sin banner de preview — el HTML standalone ahora es producción real
     #    (eliminado el banner que decía "PREVIEW ESTÁTICO")
 
+    # 6b. Header scroll behavior — como eliminamos los scripts de Next.js,
+    #     la lógica de scroll del Header no funciona. La reemplazamos con
+    #     CSS + JS mínimo: toggle de la clase `header-scrolled` y reglas CSS
+    #     que sobreescriben los colores para máximo contraste sobre cualquier
+    #     sección (clara u oscura).
+    header_css_js = """
+<style>
+  /* Header scrolled state — fondo sólido para contraste garantizado */
+  header.fixed.header-scrolled {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+    color: var(--foreground) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06) !important;
+  }
+  /* Nav links en estado scrolled */
+  header.fixed.header-scrolled nav a {
+    color: var(--muted-foreground) !important;
+  }
+  header.fixed.header-scrolled nav a:hover {
+    color: var(--foreground) !important;
+  }
+  /* Botón "Solicitar cotización" en estado scrolled */
+  header.fixed.header-scrolled button[class*="rounded-full"][class*="bg-background"] {
+    background-color: var(--foreground) !important;
+    color: var(--background) !important;
+  }
+  header.fixed.header-scrolled button[class*="rounded-full"][class*="bg-background"]:hover {
+    background-color: var(--foreground) !important;
+    opacity: 0.9;
+  }
+  /* Botón hamburguesa móvil — hereda color del header */
+  header.fixed.header-scrolled button[aria-label="Abrir menú"],
+  header.fixed.header-scrolled button[aria-label="Cerrar menú"] {
+    color: var(--foreground) !important;
+  }
+</style>
+<script>
+  // Toggle clase header-scrolled según scroll position
+  (function() {
+    var header = document.querySelector('header.fixed');
+    if (!header) return;
+    function updateHeader() {
+      if (window.scrollY > 8) {
+        header.classList.add('header-scrolled');
+      } else {
+        header.classList.remove('header-scrolled');
+      }
+    }
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  })();
+</script>
+"""
+    html = re.sub(
+        r'(</body>)',
+        header_css_js + r'\1',
+        html,
+        count=1,
+    )
+
     # 7. Forzar que el body tenga scroll normal (a veces Next inlinea overflow:hidden)
     html = re.sub(
         r'</head>',
