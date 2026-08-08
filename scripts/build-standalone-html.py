@@ -186,6 +186,15 @@ def main():
   header.fixed.header-scrolled button[aria-label="Cerrar menú"] {
     color: var(--foreground) !important;
   }
+  /* ─── Mobile menu visibility (controlled via CSS, toggled via JS) ─── */
+  /* Panel cerrado por defecto */
+  .mobile-menu-panel.mobile-menu-closed {
+    display: none !important;
+  }
+  /* Panel abierto */
+  .mobile-menu-panel.mobile-menu-open {
+    display: block !important;
+  }
 </style>
 <script>
   // Toggle clase header-scrolled según scroll position
@@ -201,6 +210,104 @@ def main():
     }
     updateHeader();
     window.addEventListener('scroll', updateHeader, { passive: true });
+  })();
+
+  // ─── Mobile menu toggle (vanilla JS — Reemplaza onClick de React) ───
+  (function() {
+    var toggle = document.querySelector('.mobile-menu-toggle');
+    var panel = document.querySelector('.mobile-menu-panel');
+    if (!toggle || !panel) return;
+
+    // Inyectar ambos iconos (Menu y X) — React solo renderiza uno
+    // Guardamos el SVG actual (Menu, porque open=false en SSR) e inyectamos el X
+    var menuSvg = toggle.querySelector('svg');
+    if (menuSvg) {
+      menuSvg.classList.add('lucide-menu');
+      menuSvg.style.display = 'block';
+    }
+    // Crear el icono X (SVG copia del lucide X)
+    var xSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    xSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    xSvg.setAttribute('width', '20');
+    xSvg.setAttribute('height', '20');
+    xSvg.setAttribute('viewBox', '0 0 24 24');
+    xSvg.setAttribute('fill', 'none');
+    xSvg.setAttribute('stroke', 'currentColor');
+    xSvg.setAttribute('stroke-width', '2');
+    xSvg.setAttribute('stroke-linecap', 'round');
+    xSvg.setAttribute('stroke-linejoin', 'round');
+    xSvg.classList.add('lucide', 'lucide-x');
+    xSvg.style.display = 'none';
+    xSvg.innerHTML = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
+    toggle.appendChild(xSvg);
+
+    function closeMenu() {
+      panel.classList.remove('mobile-menu-open');
+      panel.classList.add('mobile-menu-closed');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      toggle.setAttribute('aria-expanded', 'false');
+      if (menuSvg) menuSvg.style.display = 'block';
+      xSvg.style.display = 'none';
+    }
+
+    function openMenu() {
+      panel.classList.remove('mobile-menu-closed');
+      panel.classList.add('mobile-menu-open');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      toggle.setAttribute('aria-expanded', 'true');
+      if (menuSvg) menuSvg.style.display = 'none';
+      xSvg.style.display = 'block';
+    }
+
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (panel.classList.contains('mobile-menu-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Cerrar al hacer clic en cualquier link del menú
+    var navLinks = panel.querySelectorAll('a, button');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        closeMenu();
+      });
+    });
+
+    // Cerrar al hacer clic fuera del header
+    var header = document.querySelector('header.fixed');
+    document.addEventListener('click', function(e) {
+      if (panel.classList.contains('mobile-menu-open') &&
+          header && !header.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // Cerrar con tecla Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && panel.classList.contains('mobile-menu-open')) {
+        closeMenu();
+      }
+    });
+  })();
+
+  // ─── Smooth scroll para anclas (reemplaza handleNav de React) ───
+  (function() {
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var href = link.getAttribute('href');
+        if (href && href.length > 1) {
+          var target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
   })();
 </script>
 """

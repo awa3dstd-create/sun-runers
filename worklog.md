@@ -409,3 +409,61 @@ Stage Summary:
   nitidez total a cualquier tamaño y resolviendo el problema de letras diminutas/distorsionadas
 - Consistencia de marca entre header y footer (mismo wordmark, mismo color accent en el guion)
 - URL pública verificada: https://sun-runers.pages.dev — footer visualmente perfecto
+
+---
+Task ID: 18
+Agent: main (Super Z)
+Task: Arreglar botón de menú hamburguesa del header que no funcionaba en móvil
+
+Work Log:
+- Diagnosticado: el botón de menú móvil (hamburguesa) no funcionaba en producción
+  • Causa raíz: build-standalone-html.py elimina todos los scripts de Next.js (lines 57-72)
+    para que el HTML sea estático, pero eso rompe useState y onClick de React
+  • Problema adicional: como `open` empezaba en `false`, el SSR NO renderizaba el menú
+    móvil en el HTML (estaba dentro de `{open && (...)}`), así que aunque el JS funcionara
+    no había menú que mostrar
+  • Mismo tipo de problema que tuvimos con el scroll del header en Task 15
+- Cambios en src/components/site/Header.tsx:
+  • Menú móvil ahora SIEMPRE en el DOM (no condicional con `open &&`)
+  • Visibilidad controlada por clases CSS: `mobile-menu-open` / `mobile-menu-closed`
+  • Estructura: <div className="... mobile-menu-panel mobile-menu-closed"> con nav adentro
+  • Botón toggle con clase estable `mobile-menu-toggle` para selección vía JS
+  • Links con clase `mobile-nav-link` (aunque el JS actual usa `a, button` para mayor cobertura)
+  • aria-label dinámico: "Abrir menú" / "Cerrar menú" según estado
+  • En React app: todo sigue funcionando igual (state toggle + class swap)
+- Cambios en scripts/build-standalone-html.py:
+  • CSS nuevo:
+    - .mobile-menu-panel.mobile-menu-closed { display: none !important; }
+    - .mobile-menu-panel.mobile-menu-open { display: block !important; }
+  • JS nuevo (3 bloques):
+    1. Mobile menu toggle:
+       - Selecciona .mobile-menu-toggle y .mobile-menu-panel
+       - Inyecta icono X SVG (porque React solo renderiza Menu en SSR con open=false)
+       - Funciones openMenu() / closeMenu() que alternan clases y iconos
+       - Toggle en click del botón
+       - Close al hacer clic en cualquier link/botón del panel
+       - Close al hacer clic fuera del header
+       - Close con tecla Escape
+    2. Smooth scroll para anclas # (reemplaza handleNav de React):
+       - Selecciona todos a[href^="#"]
+       - preventDefault + scrollIntoView smooth
+  • CSS actualizado para selector de botón hamburguesa: ahora usa aria-label="Abrir menú"
+    Y aria-label="Cerrar menú" (antes solo "Abrir menú")
+- Regenerado standalone HTML: 1355.2 KB
+- Deploy exitoso a https://sun-runers.pages.dev
+- Verificación con agent-browser (viewport móvil 390x844):
+  • DOM check: toggle y panel presentes, clases correctas (mobile-menu-closed inicial)
+  • Toggle click vía JS: panel cambia a mobile-menu-open, display: block, aria-label "Cerrar menú" ✓
+  • Screenshot del menú abierto: VLM confirma 6 opciones visibles (Inicio, Servicios,
+    Tecnologías, Trabajos, Conócenos, Contacto) + botón "Solicitar cotización" ✓
+  • Click en link "Servicios": menú se cierra automáticamente (mobile-menu-closed, display none,
+    aria-label vuelve a "Abrir menú") ✓
+
+Stage Summary:
+- Botón hamburguesa del header totalmente funcional en producción (HTML standalone)
+- Menú se abre, muestra las 6 opciones de navegación + botón cotización
+- Menú se cierra al: clic en link, clic fuera del header, o tecla Escape
+- Icono alterna entre hamburguesa (Menu) y X correctamente
+- Smooth scroll restaurado para todas las anclas # (también estaba roto por falta de React)
+- En React app (dev mode) todo sigue funcionando igual vía useState
+- URL pública: https://sun-runers.pages.dev — menú móvil verificado y funcional

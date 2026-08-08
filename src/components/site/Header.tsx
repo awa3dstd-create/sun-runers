@@ -90,8 +90,8 @@ export function Header() {
           {/* Mobile toggle */}
           <button
             onClick={() => setOpen(!open)}
-            className="lg:hidden p-2 -mr-2"
-            aria-label="Abrir menú"
+            className="lg:hidden p-2 -mr-2 mobile-menu-toggle"
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={open}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -99,32 +99,35 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="lg:hidden bg-background border-b border-border">
-          <nav className="mx-auto max-w-7xl px-5 py-4 flex flex-col gap-1">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNav(item.href);
-                }}
-                className="px-3 py-3 text-base text-foreground hover:bg-muted rounded-md transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-            <Button
-              className="mt-2 bg-foreground text-background hover:bg-foreground/90 rounded-full"
-              onClick={() => handleNav("#contacto")}
+      {/* Mobile menu — always in DOM, visibility via CSS for standalone HTML compat */}
+      <div
+        className={cn(
+          "lg:hidden bg-background border-b border-border mobile-menu-panel",
+          open ? "mobile-menu-open" : "mobile-menu-closed"
+        )}
+      >
+        <nav className="mx-auto max-w-7xl px-5 py-4 flex flex-col gap-1">
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNav(item.href);
+              }}
+              className="px-3 py-3 text-base text-foreground hover:bg-muted rounded-md transition-colors mobile-nav-link"
             >
-              Solicitar cotización
-            </Button>
-          </nav>
-        </div>
-      )}
+              {item.label}
+            </a>
+          ))}
+          <Button
+            className="mt-2 bg-foreground text-background hover:bg-foreground/90 rounded-full mobile-nav-link"
+            onClick={() => handleNav("#contacto")}
+          >
+            Solicitar cotización
+          </Button>
+        </nav>
+      </div>
     </header>
   );
 }
