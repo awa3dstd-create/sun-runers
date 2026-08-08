@@ -228,3 +228,49 @@ Stage Summary:
 - Otro worker viejo `sun-runners-api` ya había sido eliminado en Task ID 12
 - La otra app del usuario en Cloudflare NO fue tocada (subdominio de cuenta sigue siendo dashiellyeneri)
 - Pendiente (con usuario): configurar secrets de Brevo en el proyecto Pages nuevo vía `wrangler pages secret put BREVO_API_KEY --project-name=sun-runners`
+
+---
+Task ID: 14
+Agent: main (Super Z)
+Task: Asegurar que las imágenes iniciales estén embebidas y se muestren correctamente en producción
+
+Work Log:
+- Diagnosticado: usuario reportó que faltaban imágenes en algunos apartados de la web deployada
+- Inspeccionado HTML standalone de pages-deploy/public/index.html:
+  • 9 data URIs embebidas (2 SVG + 7 JPG) — las imágenes SÍ estaban embebidas como base64
+  • TODAS las imágenes embebidas coinciden con las originales (mismo MD5 que public/assets/hero.jpg)
+- Captura visual con agent-browser + VLM reveló: hero section mostraba fondo negro sólido (la imagen no se veía)
+- Análisis del HTML: encontrado bug en script /home/z/my-project/scripts/build-standalone-html.py
+  • Línea 80: replace_asset() devolvía f'"{data_uri}"' — solo la comilla + data URI, PERDIENDO el atributo src= o href=
+  • Resultado: <img "data:image/jpeg;base64,..." ...> en vez de <img src="data:image/jpeg;base64,..." ...>
+  • El navegador interpretaba `"data:..."` como un atributo booleano sin nombre → la imagen no se cargaba
+- Fix en build-standalone-html.py:
+  • Regex cambiado de (?:src|href)="(/assets/...)" a (src|href)="(/assets/...)" con grupo capturador para el atributo
+  • replace_asset ahora devuelve f'{attr}="{data_uri}"' preservando el atributo correcto
+  • Eliminado también el banner molesto "PREVIEW ESTÁTICO" del final del body (ya no es preview, es producción)
+  • Cambiado OUT_FILE para escribir directo a /home/z/my-project/pages-deploy/public/index.html
+- Regenerado HTML standalone:
+  • Iniciado Next.js dev server (npm run dev)
+  • Capturado HTML renderizado de http://localhost:3000/ (107KB)
+  • Descargado CSS desde /_next/static/chunks/[root-of-the-server]__3b974842._.css (155KB)
+  • Ejecutado build-standalone-html.py → 1352.6 KB con 7 imágenes embebidas correctamente
+- Verificación programática con verify-html.py:
+  • 7 tags <img> con src="data:image/jpeg;base64,..." correctos
+  • 0 patrones rotos <img "data: (missing src=)
+  • Banner PREVIEW ESTÁTICO eliminado ✓
+  • Imágenes embebidas: hero (113KB) + 6 portfolio (142, 63, 76, 173, 154, 116 KB)
+- Deploy a Cloudflare Pages: https://26ab92f7.sun-runners.pages.dev (preview) → propagated to https://sun-runners.pages.dev
+- Verificación visual con agent-browser + VLM:
+  • Hero: "imagen de fondo visible mostrando paneles solares/fotovoltaicos" ✓
+  • Portfolio (scroll 1): "1 imagen de proyecto cargando correctamente — instalación fotovoltaica al aire libre con bombeo solar" ✓
+  • Portfolio (scroll 2): "3 imágenes visibles, todas cargando correctamente — bombeo solar, AC split inverter, tablero eléctrico" ✓
+  • Full page: "6 imágenes de portfolio, ninguna rota, todas nítidas y bien posicionadas" ✓
+- Detenido Next.js dev server (ya no se necesita)
+
+Stage Summary:
+- BUG crítico arreglado: las imágenes embebidas no se mostraban por un error de sintaxis en el HTML standalone
+- 7 imágenes iniciales embebidas como data URIs (hero + 6 portfolio), todas verificadas visibles en producción
+- Banner "PREVIEW ESTÁTICO" eliminado del footer
+- URL pública final: https://sun-runners.pages.dev con todas las imágenes cargando correctamente
+- Script build-standalone-html.py queda persistido y arreglado para futuras regeneraciones
+- Pendiente (con usuario): cuando el usuario tenga sus fotos reales de trabajos/instalaciones, las reemplazo en public/assets/portfolio/p1.jpg ... p6.jpg y hero.jpg, regenero el standalone y redeployo

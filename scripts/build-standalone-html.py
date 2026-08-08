@@ -15,7 +15,7 @@ from pathlib import Path
 SRC_HTML = Path("/tmp/sun-runners-preview.html")
 SRC_CSS = Path("/tmp/sun-runners.css")
 PUBLIC_DIR = Path("/home/z/my-project/public")
-OUT_FILE = Path("/home/z/my-project/download/sun-runners-preview.html")
+OUT_FILE = Path("/home/z/my-project/pages-deploy/public/index.html")
 
 
 def encode_image_data_uri(path: Path) -> str:
@@ -72,17 +72,18 @@ def main():
     )
 
     # 3. Reemplazar las rutas /assets/... y /favicon.svg con data URIs.
-    #    Buscamos src="/assets/...", href="/favicon.svg", url(/assets/...) etc.
+    #    Preservamos el atributo (src= o href=) y solo cambiamos el valor.
     def replace_asset(match):
-        relative_path = match.group(1).lstrip("/")
+        attr = match.group(1)  # 'src' o 'href'
+        relative_path = match.group(2).lstrip("/")
         asset_path = PUBLIC_DIR / relative_path
         if asset_path.exists():
-            return f'"{encode_image_data_uri(asset_path)}"'
+            return f'{attr}="{encode_image_data_uri(asset_path)}"'
         return match.group(0)
 
     # src="/assets/..." y href="/favicon.svg"
     html = re.sub(
-        r'(?:src|href)="(/(?:assets|favicon\.svg|sun-runners-logo[^"]*\.svg|logo\.svg)[^"]*)"',
+        r'(src|href)="(/(?:assets|favicon\.svg|sun-runners-logo[^"]*\.svg|logo\.svg)[^"]*)"',
         replace_asset,
         html,
     )
@@ -147,18 +148,8 @@ def main():
         count=1,
     )
 
-    # 6. Agregar banner de preview al inicio del body
-    banner = """
-<div style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:#0F100C;color:#F7F5EF;padding:10px 16px;font-family:system-ui,sans-serif;font-size:11px;text-align:center;border-top:2px solid #B8702E;">
-  <strong>PREVIEW ESTÁTICO</strong> · SUN-RUNNERS · Este HTML es solo para visualización — el formulario y la animación real funcionan en el sitio Next.js
-</div>
-"""
-    html = re.sub(
-        r'(</body>)',
-        banner + r'\1',
-        html,
-        count=1,
-    )
+    # 6. Sin banner de preview — el HTML standalone ahora es producción real
+    #    (eliminado el banner que decía "PREVIEW ESTÁTICO")
 
     # 7. Forzar que el body tenga scroll normal (a veces Next inlinea overflow:hidden)
     html = re.sub(
