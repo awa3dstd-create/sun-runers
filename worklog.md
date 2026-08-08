@@ -159,3 +159,34 @@ Stage Summary:
 - D1 con schema aplicado y persistiendo solicitudes correctamente
 - Pendiente (con usuario): configurar secrets de Brevo (BREVO_API_KEY, BREVO_FROM_EMAIL, BREVO_NOTIFY_EMAIL) y WHATSAPP_PUBLIC_NUMBER vía `wrangler secret put` para activar el envío de emails
 - Pendiente (con usuario): revocar el API token de Cloudflare cuando terminemos
+
+---
+Task ID: 12
+Agent: main (Super Z)
+Task: Acortar la URL pública del deploy
+
+Work Log:
+- Diagnosticado: URL original era https://sun-runners-api.dashiellyeneri.workers.dev (51 chars)
+- Intentado cambiar subdominio de cuenta dashiellyeneri → sunrunners vía API:
+  • PUT /accounts/{id}/workers/subdomain → error 10036 "Account already has an associated subdomain"
+  • POST y PATCH → error 10405 "Method not allowed for this authentication scheme"
+  • El token de API no tiene permiso "Account Settings Edit" requerido para cambiar subdominio
+  • Razón adicional para NO tocarlo: el usuario tiene OTRA app corriendo en la misma cuenta, cambiar el subdominio rompería esa app
+- Cambiado nombre del worker sun-runners-api → sr en wrangler.toml
+- Deploy exitoso: https://sr.dashiellyeneri.workers.dev (38 chars, -13)
+- Verificación completa de la nueva URL corta:
+  • GET / → 200 text/html 1.3MB
+  • GET /sun-runners-logo.svg → 200 6899B
+  • GET /assets/hero.jpg → 200 115KB
+  • GET /api/health → 200
+  • POST /api/contact → 200 ok:true (asignó "Camagüey y oriente central" para Santiago de Cuba)
+- Eliminado el worker viejo sun-runners-api vía DELETE /accounts/{id}/workers/scripts/sun-runners-api
+
+Stage Summary:
+- URL pública final corta: https://sr.dashiellyeneri.workers.dev
+- Worker viejo eliminado para evitar URLs duplicadas en buscadores
+- Subdominio dashiellyeneri se mantiene (no se puede cambiar por API, y cambiarlo afectaría la otra app del usuario)
+- Si el usuario quiere aún más corto, opciones:
+  1. Comprar un dominio corto (ej sunrunners.cu) y vincularlo vía Workers Custom Domain → https://sunrunners.cu
+  2. Usar un acortador tipo Bitly/Rebrandly sobre la URL actual
+  3. Cambiar el subdominio en el dashboard (rompería la otra app)
