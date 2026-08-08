@@ -124,3 +124,38 @@ Stage Summary:
 - Header con contraste adaptativo (blanco sobre hero oscuro / negro sobre bg claro al hacer scroll)
 - Favicon actualizado al icono SUN-RUNNERS
 - Build de producción Next.js 16.1.3 exitoso sin errores
+
+---
+Task ID: 11
+Agent: main (Super Z)
+Task: Desplegar SUN-RUNNERS a Cloudflare Workers (frontend + API) y entregar URL pública
+
+Work Log:
+- Diagnosticado estado: la sesión anterior preparó worker/ pero NO ejecutó `wrangler deploy`
+- Staged 25 static assets en worker/public/: index.html (1.3MB standalone preview), favicon.svg, 4 variantes del logo, 7 imágenes (hero + 6 portfolio), 10 archivos woff2 de fuentes Geist
+- Actualizado wrangler.toml: añadido binding [assets] directory="./public" con not_found_handling="single-page-application"
+- Actualizado worker/src/index.ts: rutas API renombradas con prefijo /api/ (/api, /api/health, /api/contact) para no colisionar con assets estáticos
+- Deploy exitoso con wrangler 4.120.0 usando CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID del restore point
+- Aplicadas migraciones D1 (0001_init.sql) en producción remota: 2 tablas creadas (contact_request, automation_log)
+- Verificación de endpoints:
+  • GET / → sirve index.html (200, content-type: text/html)
+  • GET /favicon.svg → 200 (image/svg+xml)
+  • GET /sun-runners-logo.svg → 200 (6899 bytes)
+  • GET /assets/hero.jpg → 200 (115KB)
+  • GET /media/*.woff2 → 200 (fuentes cargan correctamente)
+  • GET /api/health → 200 JSON (reports brevoConfigured: false, esperado)
+  • GET /api → 200 JSON con endpoints disponibles
+- Verificación de formulario POST /api/contact:
+  • Respuesta 200 ok:true
+  • requestId generado (cuid-like)
+  • assignedZone: "La Habana — Centro y Oeste" (algoritmo haversine funcionando en producción)
+  • Persistencia en D1 verificada vía tabla contact_request
+  • Email sending skipped correctamente (BREVO_API_KEY no configurada — pendiente con usuario)
+
+Stage Summary:
+- URL pública en producción: https://sun-runners-api.dashiellyeneri.workers.dev
+- Frontend + API + D1 operativos en un único Worker
+- 25 assets estáticos servidos vía Workers Assets binding
+- D1 con schema aplicado y persistiendo solicitudes correctamente
+- Pendiente (con usuario): configurar secrets de Brevo (BREVO_API_KEY, BREVO_FROM_EMAIL, BREVO_NOTIFY_EMAIL) y WHATSAPP_PUBLIC_NUMBER vía `wrangler secret put` para activar el envío de emails
+- Pendiente (con usuario): revocar el API token de Cloudflare cuando terminemos

@@ -7,6 +7,15 @@ compatibility_flags = ["nodejs_compat"]
 # La URL final será: https://sun-runners-api.<subdomain>.workers.dev
 
 # ──────────────────────────────────────────────────────────
+# Static Assets — sirve el frontend (HTML/CSS/JS/fonts/SVG)
+# Las rutas no estáticas (/api/*) caen al Worker script.
+# ──────────────────────────────────────────────────────────
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+# ──────────────────────────────────────────────────────────
 # D1 Database binding
 # ──────────────────────────────────────────────────────────
 [[d1_databases]]

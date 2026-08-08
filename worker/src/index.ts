@@ -1,12 +1,14 @@
 /**
- * SUN-RUNNERS — Cloudflare Worker API
+ * SUN-RUNNERS — Cloudflare Worker (API + Static Assets)
  *
- * Endpoints:
- *   POST /contact   — Recibe solicitud del formulario, asigna ingeniero,
- *                     persiste en D1, envía emails vía Brevo.
- *   GET  /contact   — Lista últimas solicitudes (uso interno).
- *   GET  /health    — Diagnóstico de configuración.
- *   GET  /          — Información del servicio.
+ * Static assets (HTML/CSS/JS/fonts/SVG) are served automatically
+ * by Workers Assets binding (see wrangler.toml `[assets]`).
+ * This script only handles non-asset routes (API).
+ *
+ * API Endpoints:
+ *   POST /api/contact   — Recibe solicitud del formulario
+ *   GET  /api/contact   — Lista últimas solicitudes
+ *   GET  /api/health    — Diagnóstico de configuración
  */
 
 import { assignNearestEngineer } from "./engineer-assignment";
@@ -56,16 +58,16 @@ export default {
     }
 
     try {
-      if (path === "/" && req.method === "GET") {
+      if (path === "/api" && req.method === "GET") {
         return json({
           service: "SUN-RUNNERS API",
           version: "1.0.0",
-          endpoints: ["/contact", "/health"],
+          endpoints: ["/api/contact", "/api/health"],
           timestamp: new Date().toISOString(),
         });
       }
 
-      if (path === "/health" && req.method === "GET") {
+      if (path === "/api/health" && req.method === "GET") {
         return json({
           hasApiKey: Boolean(env.BREVO_API_KEY),
           fromEmail: env.BREVO_FROM_EMAIL ?? "",
@@ -81,11 +83,11 @@ export default {
         });
       }
 
-      if (path === "/contact" && req.method === "POST") {
+      if (path === "/api/contact" && req.method === "POST") {
         return await handleContact(req, env);
       }
 
-      if (path === "/contact" && req.method === "GET") {
+      if (path === "/api/contact" && req.method === "GET") {
         return await listRequests(env);
       }
 
