@@ -17,7 +17,7 @@ export function buildClientConfirmationEmail(data: ClientEmailData): {
   text: string;
 } {
   const { name, service, zone, whatsappLink } = data;
-  const subject = `SUN-RUNNERS — Recibimos tu solicitud`;
+  const subject = `SUN-RUNERS — Recibimos tu solicitud`;
 
   const text = `Hola ${name},
 
@@ -29,9 +29,9 @@ Qué sigue:
 
 ${whatsappLink ? `WhatsApp directo: ${whatsappLink}` : ""}
 
-Gracias por confiar en SUN-RUNNERS.
+Gracias por confiar en SUN-RUNERS.
 
-— Equipo SUN-RUNNERS
+— Equipo SUN-RUNERS
 ${COMPANY.email}
 ${COMPANY.phone}`;
 
@@ -44,7 +44,7 @@ ${COMPANY.phone}`;
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #DDD6C5;max-width:600px;width:100%;">
         <tr><td style="padding:32px 40px 24px 40px;border-bottom:1px solid #ECE7DA;">
           <span style="display:inline-block;width:28px;height:28px;background-color:#0F100C;border-radius:6px;vertical-align:middle;margin-right:10px;"></span>
-          <span style="font-size:18px;font-weight:500;letter-spacing:0.18em;color:#0F100C;vertical-align:middle;">SUN-RUNNERS</span>
+          <span style="font-size:18px;font-weight:500;letter-spacing:0.18em;color:#0F100C;vertical-align:middle;">SUN-RUNERS</span>
         </td></tr>
         <tr><td style="padding:40px;">
           <h1 style="margin:0 0 24px 0;font-size:26px;font-weight:500;letter-spacing:-0.02em;color:#0F100C;line-height:1.2;">Hola ${escapeHtml(name)},</h1>
@@ -71,7 +71,7 @@ ${COMPANY.phone}`;
             </td></tr>
           </table>` : ""}
           <p style="margin:0;font-size:16px;line-height:1.65;color:#4A463E;">Gracias por confiar en nosotros.</p>
-          <p style="margin:24px 0 0 0;font-size:15px;color:#0F100C;"><strong>Equipo SUN-RUNNERS</strong></p>
+          <p style="margin:24px 0 0 0;font-size:15px;color:#0F100C;"><strong>Equipo SUN-RUNERS</strong></p>
         </td></tr>
         <tr><td style="padding:24px 40px;background-color:#F7F5EF;border-top:1px solid #ECE7DA;">
           <p style="margin:0 0 8px 0;font-size:12px;color:#6A655A;line-height:1.5;">${escapeHtml(COMPANY.legalName)} · ${escapeHtml(COMPANY.city)}</p>
@@ -81,7 +81,7 @@ ${COMPANY.phone}`;
           </p>
         </td></tr>
       </table>
-      <p style="margin:20px 0 0 0;font-size:11px;color:#9A9485;text-align:center;">Este email fue enviado automáticamente desde el formulario de contacto de SUN-RUNNERS.</p>
+      <p style="margin:20px 0 0 0;font-size:11px;color:#9A9485;text-align:center;">Este email fue enviado automáticamente desde el formulario de contacto de SUN-RUNERS.</p>
     </td></tr>
   </table>
 </body>
@@ -102,9 +102,9 @@ export function buildEngineerNotificationEmail(
   data: EngineerNotificationEmailData
 ): { subject: string; html: string; text: string } {
   const { engineerName, client, zone, requestId, distanceKm } = data;
-  const subject = `[SUN-RUNNERS] Nueva solicitud #${requestId.slice(-8).toUpperCase()} — ${client.service}`;
+  const subject = `[SUN-RUNERS] Nueva solicitud #${requestId.slice(-8).toUpperCase()} — ${client.service}`;
 
-  const text = `Nueva solicitud asignada — SUN-RUNNERS
+  const text = `Nueva solicitud asignada — SUN-RUNERS
 
 Ingeniero asignado: ${engineerName}
 Zona: ${zone}${distanceKm ? ` (a ${distanceKm} km del cliente)` : ""}
@@ -122,7 +122,7 @@ Mensaje del cliente:
 ${client.message}
 
 —
-Sistema de automatización SUN-RUNNERS`;
+Sistema de automatización SUN-RUNERS`;
 
   const html = `<!DOCTYPE html>
 <html lang="es">
@@ -132,7 +132,7 @@ Sistema de automatización SUN-RUNNERS`;
     <tr><td align="center">
       <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #DDD6C5;max-width:640px;width:100%;">
         <tr><td style="padding:24px 32px;background-color:#0F100C;color:#F7F5EF;">
-          <span style="font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8702E;">Notificación interna · SUN-RUNNERS</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8702E;">Notificación interna · SUN-RUNERS</span>
           <h1 style="margin:8px 0 0 0;font-size:20px;font-weight:500;letter-spacing:-0.02em;color:#F7F5EF;">Nueva solicitud asignada</h1>
           <p style="margin:6px 0 0 0;font-size:13px;color:#A8A395;font-family:monospace;">#${escapeHtml(requestId.slice(-8).toUpperCase())}</p>
         </td></tr>
@@ -160,7 +160,7 @@ Sistema de automatización SUN-RUNNERS`;
           <p style="margin:0;font-size:13px;color:#6A655A;line-height:1.5;">Contacta al cliente por el canal preferido en menos de 24 horas hábiles. Esta solicitud quedó registrada en el sistema con estado <strong style="color:#0F100C;">nuevo</strong>.</p>
         </td></tr>
         <tr><td style="padding:20px 32px;background-color:#F7F5EF;border-top:1px solid #ECE7DA;">
-          <p style="margin:0;font-size:11px;color:#6A655A;line-height:1.5;">Email automático generado por el sistema de automatización SUN-RUNNERS. No respondas directamente a este correo — usa los datos del cliente arriba.</p>
+          <p style="margin:0;font-size:11px;color:#6A655A;line-height:1.5;">Email automático generado por el sistema de automatización SUN-RUNERS. No respondas directamente a este correo — usa los datos del cliente arriba.</p>
         </td></tr>
       </table>
     </td></tr>

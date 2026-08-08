@@ -41,10 +41,13 @@ export function Header() {
               e.preventDefault();
               handleNav("#inicio");
             }}
-            className="flex items-center"
-            aria-label="SUN-RUNNERS — Inicio"
+            className="flex items-center gap-2.5"
+            aria-label="SUN-RUNERS — Inicio"
           >
             <Logo className="h-7 sm:h-8" showWordmark={false} />
+            <span className="text-[15px] sm:text-base font-semibold tracking-[0.12em] uppercase">
+              SUN<span className="text-accent">-</span>RUNERS
+            </span>
           </a>
 
           {/* Desktop nav */}

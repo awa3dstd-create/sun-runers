@@ -13,7 +13,7 @@ import { getBrevoConfigStatus } from "@/lib/brevo";
  *   {
  *     "hasApiKey": true,
  *     "fromEmail": "sunrunners.cuba@gmail.com",
- *     "fromName": "SUN-RUNNERS",
+ *     "fromName": "SUN-RUNERS",
  *     "notifyEmail": "sunrunners.cuba@gmail.com",
  *     "whatsappPublic": "+53500000000",
  *     "allConfigured": true

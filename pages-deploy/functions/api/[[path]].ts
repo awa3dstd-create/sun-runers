@@ -1,5 +1,5 @@
 /**
- * SUN-RUNNERS — Pages Function: /api/*
+ * SUN-RUNERS — Pages Function: /api/*
  *
  * Catch-all para todas las rutas /api/* — enruta a handlers específicos.
  */
@@ -53,7 +53,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   try {
     if (path === "/api" && request.method === "GET") {
       return json({
-        service: "SUN-RUNNERS API",
+        service: "SUN-RUNERS API",
         version: "1.0.0",
         endpoints: ["/api/contact", "/api/health"],
         timestamp: new Date().toISOString(),
@@ -64,7 +64,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       return json({
         hasApiKey: Boolean(env.BREVO_API_KEY),
         fromEmail: env.BREVO_FROM_EMAIL ?? "",
-        fromName: env.BREVO_FROM_NAME ?? "SUN-RUNNERS",
+        fromName: env.BREVO_FROM_NAME ?? "SUN-RUNERS",
         notifyEmail: env.BREVO_NOTIFY_EMAIL ?? "",
         whatsappPublic: env.WHATSAPP_PUBLIC_NUMBER ?? "",
         allConfigured:

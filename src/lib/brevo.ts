@@ -5,7 +5,7 @@
  * Permite enviar desde una dirección Gmail verificada hacia cualquier
  * destinatario, SIN necesidad de dominio propio.
  *
- * Setup (ver /download/SUN-RUNNERS-GUIA-IMPLEMENTACION.md):
+ * Setup (ver /download/SUN-RUNERS-GUIA-IMPLEMENTACION.md):
  *   1. Crear cuenta en https://brevo.com
  *   2. Verificar el email remitente (tu Gmail) en Brevo → Senders & IP
  *   3. Generar API key en Brevo → Settings → API Keys
@@ -14,7 +14,7 @@
  * Variables de entorno requeridas (.env.local):
  *   BREVO_API_KEY=xkeysib-...
  *   BREVO_FROM_EMAIL=sunrunners.cuba@gmail.com
- *   BREVO_FROM_NAME=SUN-RUNNERS
+ *   BREVO_FROM_NAME=SUN-RUNERS
  *   BREVO_NOTIFY_EMAIL=sunrunners.cuba@gmail.com  (email central de la compañía)
  *
  * El número de WhatsApp público va en .env.local:
@@ -55,7 +55,7 @@ export function getBrevoConfigStatus() {
   return {
     hasApiKey: Boolean(process.env.BREVO_API_KEY),
     fromEmail: getEnv("BREVO_FROM_EMAIL"),
-    fromName: getEnv("BREVO_FROM_NAME", "SUN-RUNNERS"),
+    fromName: getEnv("BREVO_FROM_NAME", "SUN-RUNERS"),
     notifyEmail: getEnv("BREVO_NOTIFY_EMAIL"),
     whatsappPublic: getEnv("WHATSAPP_PUBLIC_NUMBER"),
   };
@@ -73,7 +73,7 @@ export async function sendEmail(params: SendEmailParams): Promise<{
 }> {
   const apiKey = process.env.BREVO_API_KEY;
   const fromEmail = getEnv("BREVO_FROM_EMAIL");
-  const fromName = getEnv("BREVO_FROM_NAME", "SUN-RUNNERS");
+  const fromName = getEnv("BREVO_FROM_NAME", "SUN-RUNERS");
 
   if (!apiKey) {
     return {

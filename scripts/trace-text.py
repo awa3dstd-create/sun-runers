@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Trace the text 'SUN-RUNNERS' from the original image."""
+"""Trace the text 'SUN-RUNERS' from the original image."""
 from PIL import Image
 import numpy as np
 import json

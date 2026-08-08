@@ -25,7 +25,7 @@ export function Hero() {
       <div className="absolute inset-0">
         <img
           src="/assets/hero.jpg"
-          alt="Instalación fotovoltaica SUN-RUNNERS al atardecer"
+          alt="Instalación fotovoltaica SUN-RUNERS al atardecer"
           className="h-full w-full object-cover opacity-55"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/70 to-foreground/30" />

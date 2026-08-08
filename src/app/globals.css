@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ────────────────────────────────────────────────────────────
-   SUN-RUNNERS — Sistema de diseño
+   SUN-RUNERS — Sistema de diseño
    Estética: minimalismo editorial cálido.
    Inspiración: Apple, Linear, Vercel, Bloomberg, oficinas de
    arquitectura (Annex, BIG). Mucho aire, jerarquía tipográfica
@@ -193,7 +193,7 @@
 }
 
 /* Animación sutil de aparición */
-@keyframes sun-runners-fade-up {
+@keyframes sun-runers-fade-up {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -204,16 +204,16 @@
   }
 }
 .fade-up {
-  animation: sun-runners-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: sun-runers-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* ════════════════════════════════════════════════════════════
-   SUN-RUNNERS — Animación de intro (3 segundos)
+   SUN-RUNERS — Animación de intro (3 segundos)
    Fondo negro, logo en blanco, tal como en la imagen original.
    Secuencia:
      0.0s – 0.6s : fade-in del fondo negro
      0.4s – 1.4s : dibujo del icono (sol + rayos) con scale + fade
-     1.2s – 2.0s : fade-in del wordmark "SUN-RUNNERS"
+     1.2s – 2.0s : fade-in del wordmark "SUN-RUNERS"
      2.4s – 3.0s : fade-out completo (hacia el sitio)
    ════════════════════════════════════════════════════════════ */
 @keyframes intro-bg-in {

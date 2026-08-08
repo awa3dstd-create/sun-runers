@@ -7,30 +7,30 @@ import type {
 } from "@/lib/types";
 
 /**
- * SUN-RUNNERS — Ingeniería en energía, automatización y clima.
+ * SUN-RUNERS — Ingeniería en energía, automatización y clima.
  *
  * Manifiesto de marca:
- *  - Nombre: SUN-RUNNERS (sol + corredores → energía en movimiento).
+ *  - Nombre: SUN-RUNERS (sol + corredores → energía en movimiento).
  *  - Identidad visual: sol con corte diagonal del que emergen tres rayos
  *    paralelos, simulando velocidad y energía solar en acción.
  *  - Logo vectorial 100% fiel al diseño original del cliente.
  */
 
 export const COMPANY = {
-  name: "SUN-RUNNERS",
-  legalName: "SUN-RUNNERS — Ingeniería en Energía",
+  name: "SUN-RUNERS",
+  legalName: "SUN-RUNERS — Ingeniería en Energía",
   tagline: "Ingeniería que perdura.",
   description:
     "Diseñamos, instalamos y mantenemos sistemas fotovoltaicos con respaldo de batería, instalaciones eléctricas residenciales, automatización de bombeo y soluciones de clima. Ingeniería ejecutada con precisión, materiales certificados y estándar internacional.",
-  email: "contacto@sun-runners.cu",
+  email: "contacto@sun-runers.cu",
   // Teléfono público de la compañía (no de ingenieros individuales)
   phone: "+53 5 000 0000",
   city: "La Habana, Cuba",
   coverage: "Toda Cuba — La Habana, Matanzas, Villa Clara, Camagüey, Santiago de Cuba",
   hours: "Lun–Sáb · 8:00–18:00",
   social: {
-    instagram: "@sun-runners.cu",
-    facebook: "SUN-RUNNERS Cuba",
+    instagram: "@sun-runers.cu",
+    facebook: "SUN-RUNERS Cuba",
   },
 } as const;
 
@@ -379,7 +379,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -82.3666,
     coverageZone: "La Habana — Centro y Oeste",
     whatsapp: "+53500000001",
-    email: "ing-1@sun-runners.cu",
+    email: "ing-1@sun-runers.cu",
   },
   {
     id: "ing-2",
@@ -387,7 +387,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -82.2889,
     coverageZone: "La Habana — Este y Guanabacoa",
     whatsapp: "+53500000002",
-    email: "ing-2@sun-runners.cu",
+    email: "ing-2@sun-runers.cu",
   },
   {
     id: "ing-3",
@@ -395,7 +395,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -81.2431,
     coverageZone: "Matanzas y Varadero",
     whatsapp: "+53500000003",
-    email: "ing-3@sun-runners.cu",
+    email: "ing-3@sun-runers.cu",
   },
   {
     id: "ing-4",
@@ -403,7 +403,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -77.7867,
     coverageZone: "Camagüey y oriente central",
     whatsapp: "+53500000004",
-    email: "ing-4@sun-runners.cu",
+    email: "ing-4@sun-runers.cu",
   },
 ];
 

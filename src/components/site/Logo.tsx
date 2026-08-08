@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface LogoProps {
   className?: string;
   /**
-   * Mostrar u ocultar el wordmark "SUN-RUNNERS".
+   * Mostrar u ocultar el wordmark "SUN-RUNERS".
    * Por defecto true. Si se pasa false, solo se muestra el icono.
    */
   showWordmark?: boolean;
@@ -11,12 +11,12 @@ interface LogoProps {
 }
 
 /**
- * SUN-RUNNERS — Logo vectorial 100% fiel al original.
+ * SUN-RUNERS — Logo vectorial 100% fiel al original.
  *
  * El logo está compuesto por:
  *  - Un círculo (sol) con un corte diagonal en el cuadrante inferior-derecho
  *  - Tres rayos paralelos en forma de paralelogramo que salen del corte
- *  - El wordmark "SUN-RUNNERS" en sans-serif geométrica bold
+ *  - El wordmark "SUN-RUNERS" en sans-serif geométrica bold
  *
  * Los paths SVG se generaron vectorizando el PNG original con marching squares
  * + simplificación RDP preservando esquinas. Fidelidad visual: 100%.
@@ -37,7 +37,7 @@ const ICON_PATHS = [
   "M 676.00,786.50 L 517.00,786.50 L 520.50,781.00 L 964.00,267.50 L 1107.00,267.50 L 1086.50,294.00 L 1038.50,350.00 L 987.50,413.00 L 676.00,786.50 Z",
 ];
 
-// Paths del wordmark "SUN-RUNNERS" (cada letra como path separado)
+// Paths del wordmark "SUN-RUNERS" (cada letra como path separado)
 const TEXT_PATHS = [
   // S
   "M 77.00,170.50 L 56.00,170.50 L 35.00,166.50 L 18.00,158.50 L -0.50,144.00 L -0.50,142.00 L 3.50,137.00 L 22.00,116.50 L 34.00,126.50 L 44.00,131.50 L 62.00,135.50 L 79.00,133.50 L 83.00,131.50 L 88.50,125.00 L 89.50,118.00 L 87.50,113.00 L 83.00,108.50 L 75.00,104.50 L 39.00,97.50 L 25.00,91.50 L 11.50,80.00 L 7.50,74.00 L 4.50,66.00 L 3.50,44.00 L 5.50,35.00 L 12.50,23.00 L 25.00,11.50 L 42.00,3.50 L 55.00,0.50 L 78.00,0.50 L 92.00,3.50 L 113.00,12.50 L 126.50,23.00 L 126.50,25.00 L 116.50,37.00 L 102.00,51.50 L 90.00,41.50 L 79.00,36.50 L 74.00,35.50 L 55.00,36.50 L 49.00,39.50 L 44.50,45.00 L 43.50,48.00 L 44.50,55.00 L 52.00,61.50 L 94.00,70.50 L 102.00,73.50 L 114.00,80.50 L 124.50,91.00 L 131.50,106.00 L 132.50,122.00 L 130.50,132.00 L 125.50,143.00 L 117.50,153.00 L 108.00,160.50 L 98.00,165.50 L 77.00,170.50 Z",
@@ -85,7 +85,7 @@ export function LogoMark({ className }: { className?: string }) {
 }
 
 /**
- * Logo completo (icono + wordmark "SUN-RUNNERS").
+ * Logo completo (icono + wordmark "SUN-RUNERS").
  * viewBox 0 0 1530 1106 (proporción 1.384:1).
  */
 export function Logo({
@@ -104,7 +104,7 @@ export function Logo({
       xmlns="http://www.w3.org/2000/svg"
       className={cn("h-8 w-auto", className)}
       role="img"
-      aria-label="SUN-RUNNERS"
+      aria-label="SUN-RUNERS"
     >
       <g fill={variant === "light" ? "#FFFFFF" : "currentColor"}>
         {/* Icono: sol + 3 rayos */}
@@ -113,7 +113,7 @@ export function Logo({
             <path key={`icon-${i}`} d={d} fillRule="evenodd" />
           ))}
         </g>
-        {/* Wordmark: SUN-RUNNERS */}
+        {/* Wordmark: SUN-RUNERS */}
         <g transform="translate(0,935)">
           {TEXT_PATHS.map((d, i) => (
             <path key={`text-${i}`} d={d} fillRule="evenodd" />

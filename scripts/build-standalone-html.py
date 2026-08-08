@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Construye un HTML standalone autocontenido del sitio SUN-RUNNERS.
+Construye un HTML standalone autocontenido del sitio SUN-RUNERS.
 
 Toma el HTML renderizado por Next.js, inline el CSS, y embebe las
 imágenes como data URIs para que el archivo se pueda abrir directamente
@@ -12,8 +12,8 @@ import re
 import sys
 from pathlib import Path
 
-SRC_HTML = Path("/tmp/sun-runners-preview.html")
-SRC_CSS = Path("/tmp/sun-runners.css")
+SRC_HTML = Path("/tmp/sun-runers-preview.html")
+SRC_CSS = Path("/tmp/sun-runers.css")
 PUBLIC_DIR = Path("/home/z/my-project/public")
 OUT_FILE = Path("/home/z/my-project/pages-deploy/public/index.html")
 
@@ -83,14 +83,14 @@ def main():
 
     # src="/assets/..." y href="/favicon.svg"
     html = re.sub(
-        r'(src|href)="(/(?:assets|favicon\.svg|sun-runners-logo[^"]*\.svg|logo\.svg)[^"]*)"',
+        r'(src|href)="(/(?:assets|favicon\.svg|sun-runers-logo[^"]*\.svg|logo\.svg)[^"]*)"',
         replace_asset,
         html,
     )
 
     # url(/assets/...) en CSS ya inlineado
     html = re.sub(
-        r'url\((/(?:assets|favicon\.svg|sun-runners-logo[^)]*\.svg|logo\.svg)[^)]*)\)',
+        r'url\((/(?:assets|favicon\.svg|sun-runers-logo[^)]*\.svg|logo\.svg)[^)]*)\)',
         lambda m: f'url({encode_image_data_uri(PUBLIC_DIR / m.group(1).lstrip("/"))})'
         if (PUBLIC_DIR / m.group(1).lstrip("/")).exists()
         else m.group(0),
@@ -125,7 +125,7 @@ def main():
         <path d="M 676.00,786.50 L 517.00,786.50 L 520.50,781.00 L 964.00,267.50 L 1107.00,267.50 L 1086.50,294.00 L 1038.50,350.00 L 987.50,413.00 L 676.00,786.50 Z" fill-rule="evenodd"/>
       </g>
     </svg>
-    <span class="intro-wordmark" style="font-family: system-ui, sans-serif; font-weight: 700; font-size: clamp(1rem, 2.2vw, 1.75rem); letter-spacing: 0.18em; text-transform: uppercase; color: #FFFFFF; animation: intro-text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;">SUN-RUNNERS</span>
+    <span class="intro-wordmark" style="font-family: system-ui, sans-serif; font-weight: 700; font-size: clamp(1rem, 2.2vw, 1.75rem); letter-spacing: 0.18em; text-transform: uppercase; color: #FFFFFF; animation: intro-text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;">SUN-RUNERS</span>
   </div>
 </div>
 <script>

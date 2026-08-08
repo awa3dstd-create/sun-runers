@@ -1,4 +1,4 @@
-// Tipos centrales del sitio SUN-RUNNERS
+// Tipos centrales del sitio SUN-RUNERS
 // Todos los datos sensibles (direcciones de ingenieros, teléfonos)
 // viven en código servidor y NUNCA se exponen al cliente.
 

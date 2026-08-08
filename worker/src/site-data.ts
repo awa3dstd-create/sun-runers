@@ -1,12 +1,12 @@
-// SUN-RUNNERS — Datos del sitio (versión Worker)
+// SUN-RUNERS — Datos del sitio (versión Worker)
 // Igual que src/lib/site-data.ts del Next.js, pero solo lo que el Worker necesita.
 
 import type { Service, EngineerPrivate } from "./types";
 
 export const COMPANY = {
-  name: "SUN-RUNNERS",
-  legalName: "SUN-RUNNERS — Ingeniería en Energía",
-  email: "contacto@sun-runners.cu",
+  name: "SUN-RUNERS",
+  legalName: "SUN-RUNERS — Ingeniería en Energía",
+  email: "contacto@sun-runers.cu",
   phone: "+53 5 000 0000",
   city: "La Habana, Cuba",
   hours: "Lun–Sáb · 8:00–18:00",
@@ -28,7 +28,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -82.3666,
     coverageZone: "La Habana — Centro y Oeste",
     whatsapp: "+53500000001",
-    email: "ing-1@sun-runners.cu",
+    email: "ing-1@sun-runers.cu",
   },
   {
     id: "ing-2",
@@ -36,7 +36,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -82.2889,
     coverageZone: "La Habana — Este y Guanabacoa",
     whatsapp: "+53500000002",
-    email: "ing-2@sun-runners.cu",
+    email: "ing-2@sun-runers.cu",
   },
   {
     id: "ing-3",
@@ -44,7 +44,7 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -81.2431,
     coverageZone: "Matanzas y Varadero",
     whatsapp: "+53500000003",
-    email: "ing-3@sun-runners.cu",
+    email: "ing-3@sun-runers.cu",
   },
   {
     id: "ing-4",
@@ -52,6 +52,6 @@ export const ENGINEERS_PRIVATE: EngineerPrivate[] = [
     lng: -77.7867,
     coverageZone: "Camagüey y oriente central",
     whatsapp: "+53500000004",
-    email: "ing-4@sun-runners.cu",
+    email: "ing-4@sun-runers.cu",
   },
 ];

@@ -1,4 +1,4 @@
-// Tipos centrales — SUN-RUNNERS API
+// Tipos centrales — SUN-RUNERS API
 // (versión simplificada del sitio Next.js para el Worker)
 
 export type ServiceId =

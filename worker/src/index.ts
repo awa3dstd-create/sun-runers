@@ -1,5 +1,5 @@
 /**
- * SUN-RUNNERS — Cloudflare Worker (API + Static Assets)
+ * SUN-RUNERS — Cloudflare Worker (API + Static Assets)
  *
  * Static assets (HTML/CSS/JS/fonts/SVG) are served automatically
  * by Workers Assets binding (see wrangler.toml `[assets]`).
@@ -60,7 +60,7 @@ export default {
     try {
       if (path === "/api" && req.method === "GET") {
         return json({
-          service: "SUN-RUNNERS API",
+          service: "SUN-RUNERS API",
           version: "1.0.0",
           endpoints: ["/api/contact", "/api/health"],
           timestamp: new Date().toISOString(),
@@ -71,7 +71,7 @@ export default {
         return json({
           hasApiKey: Boolean(env.BREVO_API_KEY),
           fromEmail: env.BREVO_FROM_EMAIL ?? "",
-          fromName: env.BREVO_FROM_NAME ?? "SUN-RUNNERS",
+          fromName: env.BREVO_FROM_NAME ?? "SUN-RUNERS",
           notifyEmail: env.BREVO_NOTIFY_EMAIL ?? "",
           whatsappPublic: env.WHATSAPP_PUBLIC_NUMBER ?? "",
           allConfigured:

@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { LogoMark } from "./Logo";
 
 /**
- * Animación de intro de SUN-RUNNERS.
+ * Animación de intro de SUN-RUNERS.
  *
  * Secuencia total: 3 segundos.
  *   0.0s – 0.6s : fade-in del fondo negro
  *   0.4s – 1.4s : dibujo del icono (sol + rayos) con scale + fade
- *   1.2s – 2.0s : fade-in del wordmark "SUN-RUNNERS"
+ *   1.2s – 2.0s : fade-in del wordmark "SUN-RUNERS"
  *   2.4s – 3.0s : fade-out completo (descubre el sitio)
  *
  * El logo se renderiza en blanco sobre fondo negro puro,
@@ -37,7 +37,7 @@ export function IntroAnimation() {
 
     // No mostrar si ya se vio en esta sesión
     try {
-      const seen = window.sessionStorage.getItem("sun-runners-intro-seen");
+      const seen = window.sessionStorage.getItem("sun-runers-intro-seen");
       if (seen === "1") return;
     } catch {
       // sessionStorage puede fallar en modo privado; continuar
@@ -47,7 +47,7 @@ export function IntroAnimation() {
 
     // Marcar como vista
     try {
-      window.sessionStorage.setItem("sun-runners-intro-seen", "1");
+      window.sessionStorage.setItem("sun-runers-intro-seen", "1");
     } catch {
       // ignore
     }
@@ -70,7 +70,7 @@ export function IntroAnimation() {
     >
       <div className="intro-logo" style={{ color: "#FFFFFF" }}>
         <LogoMark className="intro-icon" />
-        <span className="intro-wordmark">SUN-RUNNERS</span>
+        <span className="intro-wordmark">SUN-RUNERS</span>
       </div>
     </div>
   );

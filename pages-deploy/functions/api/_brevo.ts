@@ -40,11 +40,11 @@ export async function sendEmail(
 
   try {
     const body: Record<string, unknown> = {
-      sender: { email: env.BREVO_FROM_EMAIL, name: env.BREVO_FROM_NAME || "SUN-RUNNERS" },
+      sender: { email: env.BREVO_FROM_EMAIL, name: env.BREVO_FROM_NAME || "SUN-RUNERS" },
       to: params.to,
       subject: params.subject,
       htmlContent: params.html,
-      replyTo: params.replyTo ?? { email: env.BREVO_FROM_EMAIL, name: env.BREVO_FROM_NAME || "SUN-RUNNERS" },
+      replyTo: params.replyTo ?? { email: env.BREVO_FROM_EMAIL, name: env.BREVO_FROM_NAME || "SUN-RUNERS" },
     };
 
     if (params.text) body.textContent = params.text;

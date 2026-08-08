@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the complete SUN-RUNNERS logo SVG by combining icon + text paths."""
+"""Build the complete SUN-RUNERS logo SVG by combining icon + text paths."""
 import json
 
 # Load icon paths (v3)
@@ -44,7 +44,7 @@ for p in text_data['component_paths']:
 svg += '  </g>\n</svg>'
 
 # Save the logo SVG
-logo_path = '/home/z/my-project/public/sun-runners-logo.svg'
+logo_path = '/home/z/my-project/public/sun-runers-logo.svg'
 with open(logo_path, 'w') as f:
     f.write(svg)
 print(f"\nSaved logo to {logo_path}")
@@ -52,13 +52,13 @@ print(f"SVG size: {len(svg)} chars")
 
 # Also save a version with explicit white color (for favicon, etc.)
 svg_white = svg.replace('currentColor', '#FFFFFF')
-with open('/home/z/my-project/public/sun-runners-logo-white.svg', 'w') as f:
+with open('/home/z/my-project/public/sun-runers-logo-white.svg', 'w') as f:
     f.write(svg_white)
 print("Saved white version")
 
 # Save a black version
 svg_black = svg.replace('currentColor', '#000000')
-with open('/home/z/my-project/public/sun-runners-logo-black.svg', 'w') as f:
+with open('/home/z/my-project/public/sun-runers-logo-black.svg', 'w') as f:
     f.write(svg_black)
 print("Saved black version")
 

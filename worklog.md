@@ -318,3 +318,50 @@ Stage Summary:
 - Sombra sutil agregada para definir el borde inferior del header
 - Lógica de scroll restaurada en HTML standalone vía CSS+JS mínimo (los scripts de Next.js se eliminan del standalone)
 - URL pública: https://sun-runners.pages.dev — header verificado visualmente en 4 posiciones diferentes
+
+---
+Task ID: 16
+Agent: main (Super Z)
+Task: Corregir nombre de la compañía (SUN-RUNERS, una sola N) y agregar wordmark de texto en el header
+
+Work Log:
+- Diagnosticado: el nombre correcto de la empresa es SUN-RUNERS (una sola N en "RUNERS"),
+  pero el código fuente y el proyecto Pages usaban "SUN-RUNNERS" (doble N) por error de tipeo mío
+- Renombrado masivo con sed en 24 archivos:
+  • Source code (src/, worker/src/, pages-deploy/functions/): SUN-RUNNERS → SUN-RUNERS, sun-runners → sun-runers
+  • Scripts (build-standalone-html.py, trace-text.py, build-logo-svg.py): idem
+  • Excepción preservada: "sun-runners-db" (nombre de la base de datos D1) — no se renombró
+    para no perder los datos ya persistidos (3 solicitudes de prueba)
+- 125 referencias actualizadas en total, 0 referencias restantes al nombre incorrecto
+- Verificado que el email de contacto, instagram, facebook, etc. ahora usan @sun-runers.cu
+- Agregado wordmark de texto en Header.tsx:
+  • Estructura: <Logo showWordmark={false} /> + <span>SUN<span class="text-accent">-</span>RUNERS</span>
+  • Estilo: text-[15px] sm:text-base, font-semibold, tracking-[0.12em], uppercase
+  • El guion "-" se resalta con color accent (amber #B8702E) para tocar la paleta de marca
+  • gap-2.5 entre icono y texto para respiración visual
+- Creado nuevo proyecto Pages "sun-runers" (una N) vía wrangler pages project create
+- Actualizado pages-deploy/wrangler.toml: name = "sun-runers"
+- Regenerado HTML standalone:
+  • Next.js dev server iniciado, HTML capturado (107KB), CSS descargado (155KB)
+  • build-standalone-html.py ejecutado: 1354.8 KB con wordmark y nombre correcto
+- Deploy a nuevo proyecto: https://b15e3596.sun-runers.pages.dev (preview) → propagated a https://sun-runers.pages.dev
+- Verificación de la nueva URL:
+  • GET / → 200, 1.39MB text/html ✓
+  • GET /api/health → 200, fromName: "SUN-RUNERS" ✓
+  • Wordmark HTML confirmado en producción: <span>SUN<span class="text-accent">-</span>RUNERS</span> ✓
+- Verificación visual con agent-browser + VLM:
+  • Top (hero): icono logo visible + texto "SUN-RUNERS" visible + botón cotización visible ✓
+  • Scrolled: icono logo visible + texto "SUN-RUNERS" visible + botón cotización visible ✓
+- Eliminado proyecto Pages viejo "sun-runners" (doble N) vía DELETE API
+- Verificación final:
+  • https://sun-runners.pages.dev → 522 (URL vieja eliminada)
+  • https://sun-runers.pages.dev → 200 (URL nueva operativa)
+
+Stage Summary:
+- URL pública final correcta: https://sun-runers.pages.dev (una sola N, igual que el nombre de la marca)
+- Nombre de la marca unificado a SUN-RUNERS en TODO el código fuente (24 archivos, 125 referencias)
+- Wordmark de texto "SUN-RUNERS" agregado al header junto al icono del logo, con el guion "-" en color accent
+- Proyecto Pages viejo con nombre mal escrito eliminado para evitar URLs duplicadas
+- Base de datos D1 "sun-runners-db" se mantiene con el nombre viejo (preserva los datos);
+  no afecta la URL pública ni la marca visible al usuario
+- Pendiente (con usuario): cuando el usuario compre el dominio sun-runers.cu, lo vinculo como Custom Domain
