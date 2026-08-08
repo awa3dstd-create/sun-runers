@@ -15,7 +15,7 @@ export function Footer({ onNavClick }: FooterProps) {
           {/* Marca */}
           <div className="md:col-span-5">
             <div className="text-background">
-              <Logo />
+              <Logo className="h-12 sm:h-14" variant="light" />
             </div>
             <p className="mt-6 max-w-sm text-sm text-background/60 leading-relaxed">
               {COMPANY.tagline} {COMPANY.description.split(".")[0]}.

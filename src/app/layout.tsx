@@ -16,15 +16,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://helora.cu"),
+  metadataBase: new URL("https://sun-runners.cu"),
   title: {
-    default: "HELORA · Ingeniería en energía, automatización y clima",
-    template: "%s · HELORA",
+    default: "SUN-RUNNERS · Ingeniería en energía, automatización y clima",
+    template: "%s · SUN-RUNNERS",
   },
   description:
     "Diseño, instalación y mantenimiento de sistemas fotovoltaicos con respaldo de batería, instalaciones eléctricas residenciales, automatización de bombeo y soluciones de clima. Ingeniería ejecutada con precisión en toda Cuba.",
   keywords: [
-    "HELORA",
+    "SUN-RUNNERS",
     "sistemas fotovoltaicos Cuba",
     "energía solar Cuba",
     "inversores solares Cuba",
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     "apagones Cuba",
     "MUST Sunri Deye Growatt Pylontech",
   ],
-  authors: [{ name: "HELORA" }],
-  creator: "HELORA",
-  publisher: "HELORA",
+  authors: [{ name: "SUN-RUNNERS" }],
+  creator: "SUN-RUNNERS",
+  publisher: "SUN-RUNNERS",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -47,9 +47,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_CU",
-    url: "https://helora.cu",
-    siteName: "HELORA",
-    title: "HELORA · Ingeniería en energía, automatización y clima",
+    url: "https://sun-runners.cu",
+    siteName: "SUN-RUNNERS",
+    title: "SUN-RUNNERS · Ingeniería en energía, automatización y clima",
     description:
       "Sistemas fotovoltaicos con respaldo de batería, instalaciones eléctricas, automatización de bombeo y soluciones de clima. Toda Cuba.",
     images: [
@@ -57,13 +57,13 @@ export const metadata: Metadata = {
         url: "/assets/hero.jpg",
         width: 1344,
         height: 768,
-        alt: "Instalación fotovoltaica HELORA",
+        alt: "Instalación fotovoltaica SUN-RUNNERS",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HELORA · Ingeniería en energía",
+    title: "SUN-RUNNERS · Ingeniería en energía",
     description:
       "Sistemas fotovoltaicos con respaldo de batería, instalaciones eléctricas y soluciones de clima en toda Cuba.",
     images: ["/assets/hero.jpg"],

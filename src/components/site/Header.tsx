@@ -29,8 +29,8 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-background/85 backdrop-blur-xl border-b border-border/70"
-          : "bg-transparent border-b border-transparent"
+          ? "bg-background/85 backdrop-blur-xl border-b border-border/70 text-foreground"
+          : "bg-transparent border-b border-transparent text-background"
       )}
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
@@ -42,9 +42,9 @@ export function Header() {
               handleNav("#inicio");
             }}
             className="flex items-center"
-            aria-label="HELORA — Inicio"
+            aria-label="SUN-RUNNERS — Inicio"
           >
-            <Logo />
+            <Logo className="h-7 sm:h-8" showWordmark={false} />
           </a>
 
           {/* Desktop nav */}
@@ -57,7 +57,12 @@ export function Header() {
                   e.preventDefault();
                   handleNav(item.href);
                 }}
-                className="px-3.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md"
+                className={cn(
+                  "px-3.5 py-2 text-sm transition-colors rounded-md",
+                  scrolled
+                    ? "text-muted-foreground hover:text-foreground"
+                    : "text-background/70 hover:text-background"
+                )}
               >
                 {item.label}
               </a>
@@ -68,7 +73,12 @@ export function Header() {
             <Button
               size="sm"
               onClick={() => handleNav("#contacto")}
-              className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-5"
+              className={cn(
+                "rounded-full px-5 transition-colors",
+                scrolled
+                  ? "bg-foreground text-background hover:bg-foreground/90"
+                  : "bg-background text-foreground hover:bg-background/90"
+              )}
             >
               Solicitar cotización
             </Button>
@@ -77,7 +87,7 @@ export function Header() {
           {/* Mobile toggle */}
           <button
             onClick={() => setOpen(!open)}
-            className="lg:hidden p-2 -mr-2 text-foreground"
+            className="lg:hidden p-2 -mr-2"
             aria-label="Abrir menú"
             aria-expanded={open}
           >

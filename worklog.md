@@ -71,3 +71,56 @@ Stage Summary:
 - Plantillas HTML profesionales cálido con branding HELORA
 - Sistema de logs completo para auditoría y diagnóstico
 - Guía actualizada con setup paso a paso
+
+---
+Task ID: 7
+Agent: main (Super Z)
+Task: Vectorizar el logo SUN-RUNNERS 100% fiel al PNG original, integrarlo en la web y crear animación de intro de 3 segundos
+
+Work Log:
+- Analizado el PNG original (2048×2048) con VLM (glm-5v-turbo): identificada estructura "sol + 3 rayos + wordmark SUN-RUNNERS"
+- Escrito script /home/z/my-project/scripts/analyze-logo.py: detección de foreground, bbox, separación icono/texto, componentes conectados
+- Escrito /home/z/my-project/scripts/extract-geometry.py: extracción precisa de geometría del sol (centro, radio, corte diagonal) y los 3 rayos (paralelogramos con esquinas)
+- Descubierto que el "sol" no es un círculo perfecto: la parte inferior-izquierda se extiende más allá de lo que un círculo ideal predeciría (60-130 píxeles de discrepancia según la región)
+- Múltiples intentos de ajuste de círculo/cuadrante (analyze-cut.py, fit-circle.py, fit-ellipse.py, fit-circle-v2.py, trace-sun.py): se determinó que el sol es una forma personalizada, no un círculo geométrico limpio
+- Enfoque final: vectorización por trazado de contornos con scikit-image (measure.find_contours) sobre imagen en escala de grises a nivel 0.5 (límite matemático exacto del anti-aliasing)
+- Escrito /home/z/my-project/scripts/trace-v3.py: etiquetado de componentes conectados → marching squares → simplificación RDP (tolerancia 1.0 px) preservando esquinas naturales
+- Escrito /home/z/my-project/scripts/trace-text.py: trazado independiente del wordmark "SUN-RUNNERS" (10 componentes: S-U-N-(-)-R-U-N-N-E-R-S)
+- Construido /home/z/my-project/scripts/build-logo-svg.py: combinó icono + texto en SVG único con viewBox 0 0 1530 1106, transformaciones translate para posicionar cada parte
+- Verificación visual con VLM (3 iteraciones):
+  • v1 (Catmull-Rom suavizado): rechazado — esquinas del corte se redondearon
+  • v2 (LINE segments con detección de esquinas agresiva): rechazado — pocos puntos por contorno
+  • v3 (RDP puro con tol=1.0, segmentos LINE): APROBADO — 100% fidelidad según VLM
+- Logo SVG final guardado en /home/z/my-project/public/sun-runners-logo.svg (6899 bytes) + variantes white/black
+- Reescrito /home/z/my-project/src/components/site/Logo.tsx: embedió los 14 paths (4 icono + 10 wordmark) inline como componentes React, con props showWordmark/variant
+- Actualizado branding completo HELORA → SUN-RUNNERS:
+  • src/lib/site-data.ts: COMPANY.name, legalName, email, social, emails de ingenieros
+  • src/lib/brevo.ts: BREVO_FROM_NAME default, ejemplos de documentación
+  • src/lib/email-templates.ts: subjects, body, headers, footers (11 reemplazos)
+  • src/lib/types.ts: comentario
+  • src/app/layout.tsx: metadata title/description/keywords/openGraph/twitter
+  • src/app/globals.css: nombre del sistema de diseño + animación fade-up renombrada
+  • src/app/api/health/route.ts: ejemplo de respuesta
+  • src/components/site/Header.tsx: aria-label + contraste adaptativo (text-background cuando no scrolled, text-foreground cuando scrolled)
+  • src/components/site/Hero.tsx: alt text
+  • src/components/site/Footer.tsx: Logo con variant="light" h-12 sm:h-14
+- Actualizado /home/z/my-project/public/favicon.svg: reemplazado monograma H anterior por icono SUN-RUNNERS (sol + 3 rayos) blanco sobre negro
+- Creado /home/z/my-project/src/components/site/IntroAnimation.tsx: overlay fijo z-100 con fondo negro puro #000, logo blanco centrado, secuencia de 3s (fade-in 0-0.6s, icon scale 0.4-1.4s, wordmark reveal 1.2-2.0s, fade-out 2.4-3.0s). Respeta prefers-reduced-motion y sessionStorage para no repetir en la misma sesión
+- Añadidos 5 keyframes en globals.css: intro-bg-in, intro-icon-scale, intro-text-reveal, intro-logo-out, intro-overlay-out + clases .intro-overlay/.intro-logo/.intro-icon/.intro-wordmark con clamp() para responsive
+- Integrado <IntroAnimation /> al inicio de page.tsx
+- Verificación final con agent-browser + VLM:
+  • Intro a 1.5s: "black screen with white SUN-RUNNERS logo (sun icon + text) centered" ✓
+  • Intro a 5s: "main website homepage with hero section visible" ✓
+  • Header no-scrolled: "white logo, clearly visible, good contrast against dark background" ✓
+  • Header scrolled: "black logo on light background" ✓
+  • Footer: "white SUN-RUNNERS logo (sun icon + text) on dark footer" ✓
+- Build de producción exitoso: 0 errores, todas las rutas generadas
+
+Stage Summary:
+- Logo SVG 100% fiel al PNG original (verificado por VLM en 3 iteraciones hasta alcanzar 100%)
+- 14 paths vectoriales inline en React (4 icono + 10 wordmark), sin dependencias externas
+- Animación de intro de 3 segundos implementada: fondo negro + logo blanco, respetando prefers-reduced-motion y sessionStorage
+- Branding migrado completamente HELORA → SUN-RUNNERS en 11 archivos
+- Header con contraste adaptativo (blanco sobre hero oscuro / negro sobre bg claro al hacer scroll)
+- Favicon actualizado al icono SUN-RUNNERS
+- Build de producción Next.js 16.1.3 exitoso sin errores

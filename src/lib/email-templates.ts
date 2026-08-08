@@ -1,5 +1,5 @@
 /**
- * Plantillas HTML para los emails transaccionales de HELORA.
+ * Plantillas HTML para los emails transaccionales de SUN-RUNNERS.
  *
  * Diseño: profesional cálido, paleta de la marca.
  *   - Background: #F7F5EF (off-white warm)
@@ -34,7 +34,7 @@ export function buildClientConfirmationEmail(data: ClientEmailData): {
 } {
   const { name, service, zone, whatsappLink } = data;
 
-  const subject = `HELORA — Recibimos tu solicitud`;
+  const subject = `SUN-RUNNERS — Recibimos tu solicitud`;
 
   const text = `Hola ${name},
 
@@ -46,9 +46,9 @@ Qué sigue:
 
 ${whatsappLink ? `WhatsApp directo: ${whatsappLink}` : ""}
 
-Gracias por confiar en HELORA.
+Gracias por confiar en SUN-RUNNERS.
 
-— Equipo HELORA
+— Equipo SUN-RUNNERS
 ${COMPANY.email}
 ${COMPANY.phone}`;
 
@@ -70,7 +70,7 @@ ${COMPANY.phone}`;
             <td style="padding:32px 40px 24px 40px;border-bottom:1px solid #ECE7DA;">
               <div style="display:inline-block;vertical-align:middle;">
                 <span style="display:inline-block;width:28px;height:28px;background-color:#0F100C;border-radius:6px;vertical-align:middle;margin-right:10px;"></span>
-                <span style="font-size:18px;font-weight:500;letter-spacing:0.18em;color:#0F100C;vertical-align:middle;">HELORA</span>
+                <span style="font-size:18px;font-weight:500;letter-spacing:0.18em;color:#0F100C;vertical-align:middle;">SUN-RUNNERS</span>
               </div>
             </td>
           </tr>
@@ -131,7 +131,7 @@ ${COMPANY.phone}`;
               </p>
 
               <p style="margin:24px 0 0 0;font-size:15px;color:#0F100C;">
-                <strong>Equipo HELORA</strong>
+                <strong>Equipo SUN-RUNNERS</strong>
               </p>
             </td>
           </tr>
@@ -152,7 +152,7 @@ ${COMPANY.phone}`;
         </table>
 
         <p style="margin:20px 0 0 0;font-size:11px;color:#9A9485;text-align:center;">
-          Este email fue enviado automáticamente desde el formulario de contacto de HELORA.
+          Este email fue enviado automáticamente desde el formulario de contacto de SUN-RUNNERS.
         </p>
       </td>
     </tr>
@@ -184,9 +184,9 @@ export function buildEngineerNotificationEmail(
 ): { subject: string; html: string; text: string } {
   const { engineerName, client, zone, requestId, distanceKm } = data;
 
-  const subject = `[HELORA] Nueva solicitud #${requestId.slice(-8).toUpperCase()} — ${client.service}`;
+  const subject = `[SUN-RUNNERS] Nueva solicitud #${requestId.slice(-8).toUpperCase()} — ${client.service}`;
 
-  const text = `Nueva solicitud asignada — HELORA
+  const text = `Nueva solicitud asignada — SUN-RUNNERS
 
 Ingeniero asignado: ${engineerName}
 Zona: ${zone}${distanceKm ? ` (a ${distanceKm} km del cliente)` : ""}
@@ -204,7 +204,7 @@ Mensaje del cliente:
 ${client.message}
 
 —
-Sistema de automatización HELORA`;
+Sistema de automatización SUN-RUNNERS`;
 
   const html = `<!DOCTYPE html>
 <html lang="es">
@@ -223,7 +223,7 @@ Sistema de automatización HELORA`;
           <tr>
             <td style="padding:24px 32px;background-color:#0F100C;color:#F7F5EF;">
               <span style="font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8702E;">
-                Notificación interna · HELORA
+                Notificación interna · SUN-RUNNERS
               </span>
               <h1 style="margin:8px 0 0 0;font-size:20px;font-weight:500;letter-spacing:-0.02em;color:#F7F5EF;">
                 Nueva solicitud asignada
@@ -328,7 +328,7 @@ Sistema de automatización HELORA`;
           <tr>
             <td style="padding:20px 32px;background-color:#F7F5EF;border-top:1px solid #ECE7DA;">
               <p style="margin:0;font-size:11px;color:#6A655A;line-height:1.5;">
-                Email automático generado por el sistema de automatización HELORA.
+                Email automático generado por el sistema de automatización SUN-RUNNERS.
                 No respondas directamente a este correo — usa los datos del cliente arriba.
               </p>
             </td>

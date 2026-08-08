@@ -9,6 +9,7 @@ import { Portfolio } from "@/components/site/Portfolio";
 import { About } from "@/components/site/About";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
+import { IntroAnimation } from "@/components/site/IntroAnimation";
 
 export default function Home() {
   const [preselectedService, setPreselectedService] = useState<string | null>(
@@ -41,6 +42,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <IntroAnimation />
       <Header />
       <main className="flex-1">
         <Hero />

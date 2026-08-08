@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ────────────────────────────────────────────────────────────
-   HELORA — Sistema de diseño
+   SUN-RUNNERS — Sistema de diseño
    Estética: minimalismo editorial cálido.
    Inspiración: Apple, Linear, Vercel, Bloomberg, oficinas de
    arquitectura (Annex, BIG). Mucho aire, jerarquía tipográfica
@@ -193,7 +193,7 @@
 }
 
 /* Animación sutil de aparición */
-@keyframes helora-fade-up {
+@keyframes sun-runners-fade-up {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -204,7 +204,110 @@
   }
 }
 .fade-up {
-  animation: helora-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: sun-runners-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SUN-RUNNERS — Animación de intro (3 segundos)
+   Fondo negro, logo en blanco, tal como en la imagen original.
+   Secuencia:
+     0.0s – 0.6s : fade-in del fondo negro
+     0.4s – 1.4s : dibujo del icono (sol + rayos) con scale + fade
+     1.2s – 2.0s : fade-in del wordmark "SUN-RUNNERS"
+     2.4s – 3.0s : fade-out completo (hacia el sitio)
+   ════════════════════════════════════════════════════════════ */
+@keyframes intro-bg-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes intro-icon-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+@keyframes intro-text-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    letter-spacing: 0.4em;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.18em;
+    filter: blur(0);
+  }
+}
+@keyframes intro-logo-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+@keyframes intro-overlay-out {
+  from { opacity: 1; pointer-events: auto; }
+  to   { opacity: 0; pointer-events: none; }
+}
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: intro-bg-in 0.6s ease-out both, intro-overlay-out 0.6s ease-in 2.4s both;
+}
+.intro-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: intro-logo-out 0.6s ease-in 2.4s both;
+}
+.intro-logo .intro-icon {
+  width: clamp(80px, 14vw, 180px);
+  height: auto;
+  animation: intro-icon-scale 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+.intro-logo .intro-wordmark {
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.2vw, 1.75rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  animation: intro-text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay,
+  .intro-logo,
+  .intro-logo .intro-icon,
+  .intro-logo .intro-wordmark {
+    animation: none !important;
+  }
+  .intro-overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 /* Grid sutil de fondo (líneas hairline) */
