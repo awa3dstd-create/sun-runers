@@ -1,0 +1,29 @@
+name = "sun-runners"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ──────────────────────────────────────────────────────────
+# D1 Database binding (mismo DB que usaba el Worker)
+# ──────────────────────────────────────────────────────────
+[[d1_databases]]
+binding = "DB"
+database_name = "sun-runners-db"
+database_id = "84368f8a-9c9b-44af-bbf2-c86895ba2e11"
+
+# ──────────────────────────────────────────────────────────
+# Variables de entorno (públicas)
+# ──────────────────────────────────────────────────────────
+[vars]
+CORS_ORIGIN = "*"
+ENVIRONMENT = "production"
+
+# Secrets requeridos (setear con wrangler pages secret put <NAME>):
+#   BREVO_API_KEY
+#   BREVO_FROM_EMAIL
+#   BREVO_FROM_NAME
+#   BREVO_NOTIFY_EMAIL
+#   WHATSAPP_PUBLIC_NUMBER
+
+[observability]
+enabled = true

@@ -190,3 +190,41 @@ Stage Summary:
   1. Comprar un dominio corto (ej sunrunners.cu) y vincularlo vía Workers Custom Domain → https://sunrunners.cu
   2. Usar un acortador tipo Bitly/Rebrandly sobre la URL actual
   3. Cambiar el subdominio en el dashboard (rompería la otra app)
+
+---
+Task ID: 13
+Agent: main (Super Z)
+Task: Acortar la URL a "sun-runners" en el link (sin sr. ni dashiellyeneri)
+
+Work Log:
+- Diagnosticado: el usuario quiere reemplazar "sr.dashiellyeneri" por "sun-runners" en la URL
+- El formato Workers es fijo: <worker>.<account-subdomain>.workers.dev — imposible obtener "sun-runners.workers.dev" sin cambiar subdominio de cuenta
+- Cambiar subdominio de cuenta: bloqueado por permisos del token (error 10405) Y rompería la otra app del usuario
+- Solución: migrar a Cloudflare Pages — formato URL es <project>.pages.dev (sin subdominio de cuenta en el medio)
+- Verificado disponibilidad del nombre `sun-runners` en Pages → libre
+- Creado proyecto Pages: wrangler pages project create sun-runners --production-branch=main
+- Estructura migrada:
+  • pages-deploy/public/ — 25 static assets (HTML, logos, imágenes, fuentes)
+  • pages-deploy/functions/api/[[path]].ts — Pages Function catch-all para /api/*
+  • pages-deploy/functions/api/_*.ts — módulos auxiliares (brevo, email-templates, etc.) renombrados con prefijo _ para que Pages no los trate como rutas
+- Corregidos imports en módulos auxiliares (./site-data → ./_site-data, etc.)
+- Corregido _brevo.ts: removida dependencia circular con index.ts (Env interface definida inline)
+- wrangler.toml de Pages con pages_build_output_dir="./public" y binding D1 (mismo DB que el Worker anterior)
+- Deploy exitoso: https://sun-runners.pages.dev (29 chars — 9 menos que la URL anterior de 38)
+- Verificación completa:
+  • GET / → 200 text/html 1.3MB
+  • GET /sun-runners-logo.svg → 200 6899B
+  • GET /favicon.svg → 200 1525B
+  • GET /assets/hero.jpg → 200 115KB
+  • GET /media/*.woff2 → 200 (fuentes cargan, tras 8s de propagación inicial)
+  • GET /api/health → 200 JSON
+  • POST /api/contact → 200 ok:true (asignó "La Habana — Centro y Oeste", persistió en D1)
+- Eliminado worker viejo `sr` vía DELETE API
+
+Stage Summary:
+- URL pública final corta: https://sun-runners.pages.dev
+- Frontend + API + D1 todos operativos en la nueva URL
+- Worker viejo `sr` eliminado para evitar URLs duplicadas
+- Otro worker viejo `sun-runners-api` ya había sido eliminado en Task ID 12
+- La otra app del usuario en Cloudflare NO fue tocada (subdominio de cuenta sigue siendo dashiellyeneri)
+- Pendiente (con usuario): configurar secrets de Brevo en el proyecto Pages nuevo vía `wrangler pages secret put BREVO_API_KEY --project-name=sun-runners`
