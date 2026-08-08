@@ -365,3 +365,47 @@ Stage Summary:
 - Base de datos D1 "sun-runners-db" se mantiene con el nombre viejo (preserva los datos);
   no afecta la URL pública ni la marca visible al usuario
 - Pendiente (con usuario): cuando el usuario compre el dominio sun-runers.cu, lo vinculo como Custom Domain
+
+---
+Task ID: 17
+Agent: main (Super Z)
+Task: Arreglar las letras del nombre de la compañía en el pie de página (footer)
+
+Work Log:
+- Diagnosticado: el Footer usaba <Logo variant="light" /> (SVG completo con wordmark embebido)
+  • El SVG tiene viewBox="0 0 1530 1106" donde el icono ocupa ~71% de la altura y el wordmark
+    solo ~15% (las letras quedaban diminutas, ~8.6px en h-14)
+  • El Header ya tenía este problema arreglado en Task 16 usando <Logo showWordmark={false} />
+    + <span>SUN-RUNERS</span> separado
+- Cambios en src/components/site/Footer.tsx:
+  • Reemplazado <Logo className="h-12 sm:h-14" variant="light" /> por:
+    - <Logo className="h-12 sm:h-14 w-auto" showWordmark={false} variant="light" />
+    - <span className="text-lg sm:text-xl font-semibold tracking-[0.14em] uppercase text-background">
+        SUN<span className="text-accent">-</span>RUNERS
+      </span>
+  • Estructura: flex-col gap-3 (icono arriba, wordmark abajo)
+  • w-auto agregado para que el icono escale proporcionalmente al alto (no quede recortado)
+  • Wordmark más grande que en el header (text-lg/xl vs text-[15px]/base) porque el footer
+    tiene más espacio vertical
+- Mismo patrón visual que el Header para consistencia de marca:
+  • Icono del sol + 3 rayos
+  • "SUN-RUNERS" en mayúsculas con tracking ancho
+  • El guion "-" en color accent (amber #B8702E)
+- Regenerado HTML standalone: 1349.8 KB
+- Deploy a Cloudflare Pages (sun-runers project) exitoso:
+  • https://018e3537.sun-runers.pages.dev (preview)
+  • https://sun-runers.pages.dev (production)
+- Verificación HTML producción: ambos wordmarks (header + footer) presentes en el HTML
+- Verificación visual con agent-browser + VLM:
+  • "SUN-RUNERS" se ve perfectamente en texto blanco bold, mayúsculas, totalmente legible
+  • Icono del sol + 3 rayos limpio y nítido
+  • Letras completas, no cortadas, no distorsionadas, no superpuestas
+  • El guion entre SUN y RUNERS visible y centrado
+  • Resto del footer (tagline, legal name, copyright, horas, email) intacto
+
+Stage Summary:
+- Footer ahora usa el mismo patrón visual que el Header: icono SVG + wordmark de texto separado
+- Las letras "SUN-RUNERS" se renderizan como texto real (no como paths SVG), garantizando
+  nitidez total a cualquier tamaño y resolviendo el problema de letras diminutas/distorsionadas
+- Consistencia de marca entre header y footer (mismo wordmark, mismo color accent en el guion)
+- URL pública verificada: https://sun-runers.pages.dev — footer visualmente perfecto
