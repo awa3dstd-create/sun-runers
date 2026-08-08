@@ -1,0 +1,470 @@
+     1→---
+     2→Task ID: 2
+     3→Agent: general-purpose (research)
+     4→Task: Investigar marcas de inversores y baterías usadas en Cuba
+     5→
+     6→Work Log:
+     7→- Verificada inexistencia previa de /home/z/my-project/worklog.md; creada carpeta /home/z/my-project/scripts/
+     8→- Ejecutadas 19 búsquedas web (10 iniciales + 9 adicionales) con la herramienta z-ai function web_search; las primeras batches paralelas sufrieron rate-limiting (HTTP 429), por lo que se reejecutaron secuencialmente con sleep 5s entre llamadas
+     9→- Consultas cubrieron: marcas generales, baterías litio, Sunri, BC Energy, Must, Sunshine, marcas chinas, Growatt/Deye/Voltronic, sistemas fotovoltaicos Cuba, Pylontech, Felicity Solar, Eco-Worthy/Sunboost, Voltronic/EASUN/MUST fabricantes, Sumry/SRNE/Axpert/MPP Solar, y BC Suministros específicamente
+    10→- Leídos y analizados los 19 archivos JSON resultantes
+    11→- Sintetizada información en catálogo estructurado de 30 marcas de inversores y 19 marcas de baterías con origen, líneas/modelos, descripción y notas para Cuba
+    12→- Identificadas marcas mencionadas por el cliente: Sunri (inversor 4KW ~$1180), BC Energy (=BC Suministros, MIPYME cubana que vende kits Sumry+MUST), Must (marca #1 en Cuba), Sunshine (5-10KW 48V, ~$1850 10KW)
+    13→- Recopilado contexto del mercado: apagones frecuentes, 110/220VAC, sistemas 12/24/48V, química LiFePO4, kits 1.5KW ($1200) a 12KW ($2800+), distribución china 1800% (USD 117M en 2025), primer banco baterías 50MW en El Cotorro (jul 2026)
+    14→- Generado reporte final en /home/z/my-project/scripts/brands_research.md en español con: tabla inversores, tabla baterías, contexto Cuba, top 12 marcas para destacar en el sitio web, y recomendaciones de diseño
+    15→
+    16→Stage Summary:
+    17→- 30 marcas de inversores identificadas en Cuba, dominadas por marcas chinas (MUST, Felicity, Deye, Growatt, Sunshine, Sunri, Eco-Worthy, Sumry, SRNE, Easun, PowMr, Powland, Lvyuan, PowerSmart, JMD, Solax, Solis, SAJ, Sunchees, Xindun, Marsriva) con presencia significativa de Voltronic como fabricante ODM base, y marcas premium europeas (Victron, Fronius, Ingeteam, Azzurro) y Huawei como alternativas high-end
+    18→- 19 marcas de baterías identificadas, con Pylontech y BYD como referencias LiFePO4 modulares 48V; Felicity Solar y MUST como baterías integradas con sus inversores; Eco-Worthy Cubix100, Tensite, PlusEnergy GEL, Bluesun como complementos
+    19→- Top 12 marcas para destacar en el sitio: MUST, Felicity Solar, Deye, Growatt, Pylontech, Voltronic/Axpert, Sunshine, Sunri, Eco-Worthy, Easun/SRNE/Sumry, BC Suministros (BC Energy), GoodWe/SolaX/SAJ
+    20→- Contexto clave para diseño web: idioma español, filtros por capacidad (1.5KW a 12KW+) y voltaje (12/24/48V + 110/220V), tabla de compatibilidad inversor↔batería, sección de kits con precios Cuba, y directorio de distribuidores locales (SunCar, CubaEcoSol, CubaRenovable, Tienda Solar, BC Suministros, Infinity Solar Cuba)
+    21→- Documento entregado: /home/z/my-project/scripts/brands_research.md
+    22→
+    23→---
+    24→Task ID: 1, 3-9
+    25→Agent: main (Super Z)
+    26→Task: Construir sitio web HELORA completo con branding, datos de ingenieros, portfolio, marcas y guía de automatización Cloudflare
+    27→
+    28→Work Log:
+    29→- Inicializado proyecto Next.js 16 con fullstack-dev skill
+    30→- Lanzado agente de investigación (Task ID 2) que identificó 30 marcas de inversores y 19 de baterías en Cuba
+    31→- Generadas 7 imágenes (hero + 6 portfolio) con z-ai image generation
+    32→- Creada identidad de marca: nombre HELORA (Helios + ora), logo SVG con monograma H + acentos chevron
+    33→- Configurada paleta warm-minimalista (off-white #F7F5EF, near-black #0F100C, accent amber #B8702E)
+    34→- Implementadas 6 secciones: Hero, Servicios, Tecnologías, Portfolio, Conócenos, Contacto
+    35→- Implementado algoritmo haversine de asignación por proximidad con 30+ provincias/municipios cubanos
+    36→- Creado endpoint /api/contact con Prisma (ContactRequest + AutomationLog)
+    37→- Verificado con Agent Browser: layout desktop y mobile, envío de formulario exitoso, DB registra asignación correcta
+    38→- Creada guía completa de implementación Cloudflare (despliegue, Workers, WhatsApp Business API, email, MCP)
+    39→
+    40→Stage Summary:
+    41→- Sitio HELORA ultra-pro minimalista funcional en / (single-page con secciones ancladas)
+    42→- 16 marcas cubanas documentadas (MUST, Sunri, BC Energy, Sunshine, Deye, Growatt, Felicity, Pylontech, Voltronic, Eco-Worthy, GoodWe, SolaX, SRNE, Easun, Victron, Huawei)
+    43→- Estructura lista para que el usuario actualice ingenieros (datos públicos + privados separados)
+    44→- API de contacto operativa con asignación automática de ingeniero por proximidad
+    45→- Guía de implementación Cloudflare entregada en /home/z/my-project/download/HELORA-GUIA-IMPLEMENTACION.md
+    46→- Pendiente (con usuario): configurar Cloudflare account, WhatsApp Business API, fotos reales de ingenieros y trabajos
+    47→
+    48→---
+    49→Task ID: 10
+    50→Agent: main (Super Z)
+    51→Task: Integrar Brevo para email transaccional sin dominio propio + mostrar código completo
+    52→
+    53→Work Log:
+    54→- Aclarada la diferencia Resend (requiere dominio) vs Brevo (admite Gmail verificado)
+    55→- Creado src/lib/brevo.ts con función sendEmail() vía API v3 de Brevo
+    56→- Creado src/lib/email-templates.ts con dos plantillas HTML:
+    57→  - buildClientConfirmationEmail (cliente cálido, con CTA WhatsApp)
+    58→  - buildEngineerNotificationEmail (interna al ingeniero, con todos los datos)
+    59→- Actualizado src/app/api/contact/route.ts: ahora envía 3 emails por solicitud
+    60→  (cliente + ingeniero asignado + copia al email central) y registra logs
+    61→- Creado src/app/api/health/route.ts para diagnóstico de configuración
+    62→- Creado .env.example con todas las variables documentadas
+    63→- Actualizada /download/HELORA-GUIA-IMPLEMENTACION.md con sección 3 Brevo completa:
+    64→  comparativa, setup paso a paso, flujo de emails, troubleshooting, migración futura
+    65→- Probado endpoint /api/health: reporta correctamente que Brevo no está configurado
+    66→- Probado endpoint /api/contact: persiste solicitud + registra log email_skipped
+    67→
+    68→Stage Summary:
+    69→- Brevo integrado y listo para usar
+    70→- Usuario solo necesita pegar su BREVO_API_KEY en .env.local
+    71→- Plantillas HTML profesionales cálido con branding HELORA
+    72→- Sistema de logs completo para auditoría y diagnóstico
+    73→- Guía actualizada con setup paso a paso
+    74→
+    75→---
+    76→Task ID: 7
+    77→Agent: main (Super Z)
+    78→Task: Vectorizar el logo SUN-RUNNERS 100% fiel al PNG original, integrarlo en la web y crear animación de intro de 3 segundos
+    79→
+    80→Work Log:
+    81→- Analizado el PNG original (2048×2048) con VLM (glm-5v-turbo): identificada estructura "sol + 3 rayos + wordmark SUN-RUNNERS"
+    82→- Escrito script /home/z/my-project/scripts/analyze-logo.py: detección de foreground, bbox, separación icono/texto, componentes conectados
+    83→- Escrito /home/z/my-project/scripts/extract-geometry.py: extracción precisa de geometría del sol (centro, radio, corte diagonal) y los 3 rayos (paralelogramos con esquinas)
+    84→- Descubierto que el "sol" no es un círculo perfecto: la parte inferior-izquierda se extiende más allá de lo que un círculo ideal predeciría (60-130 píxeles de discrepancia según la región)
+    85→- Múltiples intentos de ajuste de círculo/cuadrante (analyze-cut.py, fit-circle.py, fit-ellipse.py, fit-circle-v2.py, trace-sun.py): se determinó que el sol es una forma personalizada, no un círculo geométrico limpio
+    86→- Enfoque final: vectorización por trazado de contornos con scikit-image (measure.find_contours) sobre imagen en escala de grises a nivel 0.5 (límite matemático exacto del anti-aliasing)
+    87→- Escrito /home/z/my-project/scripts/trace-v3.py: etiquetado de componentes conectados → marching squares → simplificación RDP (tolerancia 1.0 px) preservando esquinas naturales
+    88→- Escrito /home/z/my-project/scripts/trace-text.py: trazado independiente del wordmark "SUN-RUNNERS" (10 componentes: S-U-N-(-)-R-U-N-N-E-R-S)
+    89→- Construido /home/z/my-project/scripts/build-logo-svg.py: combinó icono + texto en SVG único con viewBox 0 0 1530 1106, transformaciones translate para posicionar cada parte
+    90→- Verificación visual con VLM (3 iteraciones):
+    91→  • v1 (Catmull-Rom suavizado): rechazado — esquinas del corte se redondearon
+    92→  • v2 (LINE segments con detección de esquinas agresiva): rechazado — pocos puntos por contorno
+    93→  • v3 (RDP puro con tol=1.0, segmentos LINE): APROBADO — 100% fidelidad según VLM
+    94→- Logo SVG final guardado en /home/z/my-project/public/sun-runners-logo.svg (6899 bytes) + variantes white/black
+    95→- Reescrito /home/z/my-project/src/components/site/Logo.tsx: embedió los 14 paths (4 icono + 10 wordmark) inline como componentes React, con props showWordmark/variant
+    96→- Actualizado branding completo HELORA → SUN-RUNNERS:
+    97→  • src/lib/site-data.ts: COMPANY.name, legalName, email, social, emails de ingenieros
+    98→  • src/lib/brevo.ts: BREVO_FROM_NAME default, ejemplos de documentación
+    99→  • src/lib/email-templates.ts: subjects, body, headers, footers (11 reemplazos)
+   100→  • src/lib/types.ts: comentario
+   101→  • src/app/layout.tsx: metadata title/description/keywords/openGraph/twitter
+   102→  • src/app/globals.css: nombre del sistema de diseño + animación fade-up renombrada
+   103→  • src/app/api/health/route.ts: ejemplo de respuesta
+   104→  • src/components/site/Header.tsx: aria-label + contraste adaptativo (text-background cuando no scrolled, text-foreground cuando scrolled)
+   105→  • src/components/site/Hero.tsx: alt text
+   106→  • src/components/site/Footer.tsx: Logo con variant="light" h-12 sm:h-14
+   107→- Actualizado /home/z/my-project/public/favicon.svg: reemplazado monograma H anterior por icono SUN-RUNNERS (sol + 3 rayos) blanco sobre negro
+   108→- Creado /home/z/my-project/src/components/site/IntroAnimation.tsx: overlay fijo z-100 con fondo negro puro #000, logo blanco centrado, secuencia de 3s (fade-in 0-0.6s, icon scale 0.4-1.4s, wordmark reveal 1.2-2.0s, fade-out 2.4-3.0s). Respeta prefers-reduced-motion y sessionStorage para no repetir en la misma sesión
+   109→- Añadidos 5 keyframes en globals.css: intro-bg-in, intro-icon-scale, intro-text-reveal, intro-logo-out, intro-overlay-out + clases .intro-overlay/.intro-logo/.intro-icon/.intro-wordmark con clamp() para responsive
+   110→- Integrado <IntroAnimation /> al inicio de page.tsx
+   111→- Verificación final con agent-browser + VLM:
+   112→  • Intro a 1.5s: "black screen with white SUN-RUNNERS logo (sun icon + text) centered" ✓
+   113→  • Intro a 5s: "main website homepage with hero section visible" ✓
+   114→  • Header no-scrolled: "white logo, clearly visible, good contrast against dark background" ✓
+   115→  • Header scrolled: "black logo on light background" ✓
+   116→  • Footer: "white SUN-RUNNERS logo (sun icon + text) on dark footer" ✓
+   117→- Build de producción exitoso: 0 errores, todas las rutas generadas
+   118→
+   119→Stage Summary:
+   120→- Logo SVG 100% fiel al PNG original (verificado por VLM en 3 iteraciones hasta alcanzar 100%)
+   121→- 14 paths vectoriales inline en React (4 icono + 10 wordmark), sin dependencias externas
+   122→- Animación de intro de 3 segundos implementada: fondo negro + logo blanco, respetando prefers-reduced-motion y sessionStorage
+   123→- Branding migrado completamente HELORA → SUN-RUNNERS en 11 archivos
+   124→- Header con contraste adaptativo (blanco sobre hero oscuro / negro sobre bg claro al hacer scroll)
+   125→- Favicon actualizado al icono SUN-RUNNERS
+   126→- Build de producción Next.js 16.1.3 exitoso sin errores
+   127→
+   128→---
+   129→Task ID: 11
+   130→Agent: main (Super Z)
+   131→Task: Desplegar SUN-RUNNERS a Cloudflare Workers (frontend + API) y entregar URL pública
+   132→
+   133→Work Log:
+   134→- Diagnosticado estado: la sesión anterior preparó worker/ pero NO ejecutó `wrangler deploy`
+   135→- Staged 25 static assets en worker/public/: index.html (1.3MB standalone preview), favicon.svg, 4 variantes del logo, 7 imágenes (hero + 6 portfolio), 10 archivos woff2 de fuentes Geist
+   136→- Actualizado wrangler.toml: añadido binding [assets] directory="./public" con not_found_handling="single-page-application"
+   137→- Actualizado worker/src/index.ts: rutas API renombradas con prefijo /api/ (/api, /api/health, /api/contact) para no colisionar con assets estáticos
+   138→- Deploy exitoso con wrangler 4.120.0 usando CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID del restore point
+   139→- Aplicadas migraciones D1 (0001_init.sql) en producción remota: 2 tablas creadas (contact_request, automation_log)
+   140→- Verificación de endpoints:
+   141→  • GET / → sirve index.html (200, content-type: text/html)
+   142→  • GET /favicon.svg → 200 (image/svg+xml)
+   143→  • GET /sun-runners-logo.svg → 200 (6899 bytes)
+   144→  • GET /assets/hero.jpg → 200 (115KB)
+   145→  • GET /media/*.woff2 → 200 (fuentes cargan correctamente)
+   146→  • GET /api/health → 200 JSON (reports brevoConfigured: false, esperado)
+   147→  • GET /api → 200 JSON con endpoints disponibles
+   148→- Verificación de formulario POST /api/contact:
+   149→  • Respuesta 200 ok:true
+   150→  • requestId generado (cuid-like)
+   151→  • assignedZone: "La Habana — Centro y Oeste" (algoritmo haversine funcionando en producción)
+   152→  • Persistencia en D1 verificada vía tabla contact_request
+   153→  • Email sending skipped correctamente (BREVO_API_KEY no configurada — pendiente con usuario)
+   154→
+   155→Stage Summary:
+   156→- URL pública en producción: https://sun-runners-api.dashiellyeneri.workers.dev
+   157→- Frontend + API + D1 operativos en un único Worker
+   158→- 25 assets estáticos servidos vía Workers Assets binding
+   159→- D1 con schema aplicado y persistiendo solicitudes correctamente
+   160→- Pendiente (con usuario): configurar secrets de Brevo (BREVO_API_KEY, BREVO_FROM_EMAIL, BREVO_NOTIFY_EMAIL) y WHATSAPP_PUBLIC_NUMBER vía `wrangler secret put` para activar el envío de emails
+   161→- Pendiente (con usuario): revocar el API token de Cloudflare cuando terminemos
+   162→
+   163→---
+   164→Task ID: 12
+   165→Agent: main (Super Z)
+   166→Task: Acortar la URL pública del deploy
+   167→
+   168→Work Log:
+   169→- Diagnosticado: URL original era https://sun-runners-api.dashiellyeneri.workers.dev (51 chars)
+   170→- Intentado cambiar subdominio de cuenta dashiellyeneri → sunrunners vía API:
+   171→  • PUT /accounts/{id}/workers/subdomain → error 10036 "Account already has an associated subdomain"
+   172→  • POST y PATCH → error 10405 "Method not allowed for this authentication scheme"
+   173→  • El token de API no tiene permiso "Account Settings Edit" requerido para cambiar subdominio
+   174→  • Razón adicional para NO tocarlo: el usuario tiene OTRA app corriendo en la misma cuenta, cambiar el subdominio rompería esa app
+   175→- Cambiado nombre del worker sun-runners-api → sr en wrangler.toml
+   176→- Deploy exitoso: https://sr.dashiellyeneri.workers.dev (38 chars, -13)
+   177→- Verificación completa de la nueva URL corta:
+   178→  • GET / → 200 text/html 1.3MB
+   179→  • GET /sun-runners-logo.svg → 200 6899B
+   180→  • GET /assets/hero.jpg → 200 115KB
+   181→  • GET /api/health → 200
+   182→  • POST /api/contact → 200 ok:true (asignó "Camagüey y oriente central" para Santiago de Cuba)
+   183→- Eliminado el worker viejo sun-runners-api vía DELETE /accounts/{id}/workers/scripts/sun-runners-api
+   184→
+   185→Stage Summary:
+   186→- URL pública final corta: https://sr.dashiellyeneri.workers.dev
+   187→- Worker viejo eliminado para evitar URLs duplicadas en buscadores
+   188→- Subdominio dashiellyeneri se mantiene (no se puede cambiar por API, y cambiarlo afectaría la otra app del usuario)
+   189→- Si el usuario quiere aún más corto, opciones:
+   190→  1. Comprar un dominio corto (ej sunrunners.cu) y vincularlo vía Workers Custom Domain → https://sunrunners.cu
+   191→  2. Usar un acortador tipo Bitly/Rebrandly sobre la URL actual
+   192→  3. Cambiar el subdominio en el dashboard (rompería la otra app)
+   193→
+   194→---
+   195→Task ID: 13
+   196→Agent: main (Super Z)
+   197→Task: Acortar la URL a "sun-runners" en el link (sin sr. ni dashiellyeneri)
+   198→
+   199→Work Log:
+   200→- Diagnosticado: el usuario quiere reemplazar "sr.dashiellyeneri" por "sun-runners" en la URL
+   201→- El formato Workers es fijo: <worker>.<account-subdomain>.workers.dev — imposible obtener "sun-runners.workers.dev" sin cambiar subdominio de cuenta
+   202→- Cambiar subdominio de cuenta: bloqueado por permisos del token (error 10405) Y rompería la otra app del usuario
+   203→- Solución: migrar a Cloudflare Pages — formato URL es <project>.pages.dev (sin subdominio de cuenta en el medio)
+   204→- Verificado disponibilidad del nombre `sun-runners` en Pages → libre
+   205→- Creado proyecto Pages: wrangler pages project create sun-runners --production-branch=main
+   206→- Estructura migrada:
+   207→  • pages-deploy/public/ — 25 static assets (HTML, logos, imágenes, fuentes)
+   208→  • pages-deploy/functions/api/[[path]].ts — Pages Function catch-all para /api/*
+   209→  • pages-deploy/functions/api/_*.ts — módulos auxiliares (brevo, email-templates, etc.) renombrados con prefijo _ para que Pages no los trate como rutas
+   210→- Corregidos imports en módulos auxiliares (./site-data → ./_site-data, etc.)
+   211→- Corregido _brevo.ts: removida dependencia circular con index.ts (Env interface definida inline)
+   212→- wrangler.toml de Pages con pages_build_output_dir="./public" y binding D1 (mismo DB que el Worker anterior)
+   213→- Deploy exitoso: https://sun-runners.pages.dev (29 chars — 9 menos que la URL anterior de 38)
+   214→- Verificación completa:
+   215→  • GET / → 200 text/html 1.3MB
+   216→  • GET /sun-runners-logo.svg → 200 6899B
+   217→  • GET /favicon.svg → 200 1525B
+   218→  • GET /assets/hero.jpg → 200 115KB
+   219→  • GET /media/*.woff2 → 200 (fuentes cargan, tras 8s de propagación inicial)
+   220→  • GET /api/health → 200 JSON
+   221→  • POST /api/contact → 200 ok:true (asignó "La Habana — Centro y Oeste", persistió en D1)
+   222→- Eliminado worker viejo `sr` vía DELETE API
+   223→
+   224→Stage Summary:
+   225→- URL pública final corta: https://sun-runners.pages.dev
+   226→- Frontend + API + D1 todos operativos en la nueva URL
+   227→- Worker viejo `sr` eliminado para evitar URLs duplicadas
+   228→- Otro worker viejo `sun-runners-api` ya había sido eliminado en Task ID 12
+   229→- La otra app del usuario en Cloudflare NO fue tocada (subdominio de cuenta sigue siendo dashiellyeneri)
+   230→- Pendiente (con usuario): configurar secrets de Brevo en el proyecto Pages nuevo vía `wrangler pages secret put BREVO_API_KEY --project-name=sun-runners`
+   231→
+   232→---
+   233→Task ID: 14
+   234→Agent: main (Super Z)
+   235→Task: Asegurar que las imágenes iniciales estén embebidas y se muestren correctamente en producción
+   236→
+   237→Work Log:
+   238→- Diagnosticado: usuario reportó que faltaban imágenes en algunos apartados de la web deployada
+   239→- Inspeccionado HTML standalone de pages-deploy/public/index.html:
+   240→  • 9 data URIs embebidas (2 SVG + 7 JPG) — las imágenes SÍ estaban embebidas como base64
+   241→  • TODAS las imágenes embebidas coinciden con las originales (mismo MD5 que public/assets/hero.jpg)
+   242→- Captura visual con agent-browser + VLM reveló: hero section mostraba fondo negro sólido (la imagen no se veía)
+   243→- Análisis del HTML: encontrado bug en script /home/z/my-project/scripts/build-standalone-html.py
+   244→  • Línea 80: replace_asset() devolvía f'"{data_uri}"' — solo la comilla + data URI, PERDIENDO el atributo src= o href=
+   245→  • Resultado: <img "data:image/jpeg;base64,..." ...> en vez de <img src="data:image/jpeg;base64,..." ...>
+   246→  • El navegador interpretaba `"data:..."` como un atributo booleano sin nombre → la imagen no se cargaba
+   247→- Fix en build-standalone-html.py:
+   248→  • Regex cambiado de (?:src|href)="(/assets/...)" a (src|href)="(/assets/...)" con grupo capturador para el atributo
+   249→  • replace_asset ahora devuelve f'{attr}="{data_uri}"' preservando el atributo correcto
+   250→  • Eliminado también el banner molesto "PREVIEW ESTÁTICO" del final del body (ya no es preview, es producción)
+   251→  • Cambiado OUT_FILE para escribir directo a /home/z/my-project/pages-deploy/public/index.html
+   252→- Regenerado HTML standalone:
+   253→  • Iniciado Next.js dev server (npm run dev)
+   254→  • Capturado HTML renderizado de http://localhost:3000/ (107KB)
+   255→  • Descargado CSS desde /_next/static/chunks/[root-of-the-server]__3b974842._.css (155KB)
+   256→  • Ejecutado build-standalone-html.py → 1352.6 KB con 7 imágenes embebidas correctamente
+   257→- Verificación programática con verify-html.py:
+   258→  • 7 tags <img> con src="data:image/jpeg;base64,..." correctos
+   259→  • 0 patrones rotos <img "data: (missing src=)
+   260→  • Banner PREVIEW ESTÁTICO eliminado ✓
+   261→  • Imágenes embebidas: hero (113KB) + 6 portfolio (142, 63, 76, 173, 154, 116 KB)
+   262→- Deploy a Cloudflare Pages: https://26ab92f7.sun-runners.pages.dev (preview) → propagated to https://sun-runners.pages.dev
+   263→- Verificación visual con agent-browser + VLM:
+   264→  • Hero: "imagen de fondo visible mostrando paneles solares/fotovoltaicos" ✓
+   265→  • Portfolio (scroll 1): "1 imagen de proyecto cargando correctamente — instalación fotovoltaica al aire libre con bombeo solar" ✓
+   266→  • Portfolio (scroll 2): "3 imágenes visibles, todas cargando correctamente — bombeo solar, AC split inverter, tablero eléctrico" ✓
+   267→  • Full page: "6 imágenes de portfolio, ninguna rota, todas nítidas y bien posicionadas" ✓
+   268→- Detenido Next.js dev server (ya no se necesita)
+   269→
+   270→Stage Summary:
+   271→- BUG crítico arreglado: las imágenes embebidas no se mostraban por un error de sintaxis en el HTML standalone
+   272→- 7 imágenes iniciales embebidas como data URIs (hero + 6 portfolio), todas verificadas visibles en producción
+   273→- Banner "PREVIEW ESTÁTICO" eliminado del footer
+   274→- URL pública final: https://sun-runners.pages.dev con todas las imágenes cargando correctamente
+   275→- Script build-standalone-html.py queda persistido y arreglado para futuras regeneraciones
+   276→- Pendiente (con usuario): cuando el usuario tenga sus fotos reales de trabajos/instalaciones, las reemplazo en public/assets/portfolio/p1.jpg ... p6.jpg y hero.jpg, regenero el standalone y redeployo
+   277→
+   278→---
+   279→Task ID: 15
+   280→Agent: main (Super Z)
+   281→Task: Arreglar contraste del header — logo y botón de menú se perdían al hacer scroll sobre ciertas secciones
+   282→
+   283→Work Log:
+   284→- Diagnosticado: el Header tenía dos estados:
+   285→  • No scrolled (scrollY ≤ 24px): bg-transparent text-background (texto blanco, transparente)
+   286→  • Scrolled (>24px): bg-background/85 backdrop-blur-xl text-foreground (fondo off-white 85% opacidad, texto negro)
+   287→- Problema identificado: el fondo translúcido al 85% dejaba pasar el color de las secciones oscuras
+   288→  (especialmente Tecnologías con bg-foreground #0F100C) y el logo/botones negros se confundían
+   289→- Mapeado de secciones y sus fondos:
+   290→  • Hero (inicio): bg-foreground (oscuro) — texto blanco funciona
+   291→  • Servicios: bg-background (claro) — texto negro funciona
+   292→  • Tecnologías: bg-foreground (oscuro) — texto negro NO se veía con fondo translúcido
+   293→  • Trabajos: bg-background (claro) — texto negro funciona
+   294→  • Conócenos: bg-background (claro) — texto negro funciona
+   295→  • Contacto: bg-background (claro) — texto negro funciona
+   296→- Cambios en src/components/site/Header.tsx:
+   297→  • Trigger de scroll bajado de 24px → 8px (reacciona más rápido)
+   298→  • Fondo scrolled cambiado de bg-background/85 backdrop-blur-xl → bg-background (sólido 100%)
+   299→  • Agregado shadow-sm para definir mejor el borde inferior
+   300→- BUG ADICIONAL DETECTADO Y ARREGLADO:
+   301→  • El HTML standalone eliminó los scripts de Next.js, así que la lógica de scroll del Header
+   302→    no funcionaba — el header quedaba SIEMPRE en estado "no scrolled" (transparente + texto blanco)
+   303→  • Solución: agregado bloque CSS + JS mínimo en build-standalone-html.py:
+   304→    - CSS: reglas con !important que sobreescriben colores cuando header tiene clase `header-scrolled`
+   305→    - JS: toggle de clase `header-scrolled` según window.scrollY > 8
+   306→    - Reglas cubren: header bg/color, nav links color, botón "Solicitar cotización", botón hamburguesa móvil
+   307→- Regenerado HTML standalone y deployado a Cloudflare Pages
+   308→- Verificación visual con agent-browser + VLM en 4 posiciones de scroll:
+   309→  • Top (Hero oscuro): logo y nav blancos, excelente contraste ✓
+   310→  • Servicios (claro): logo y nav negros sobre fondo blanco sólido ✓
+   311→  • Tecnologías (oscuro): logo y nav negros sobre fondo blanco sólido del header ✓ (ANTES se perdía)
+   312→  • Trabajos (claro): logo y nav negros sobre fondo blanco sólido ✓
+   313→- Verificación mobile: logo se ve claramente en top y scrolled ✓
+   314→
+   315→Stage Summary:
+   316→- Header ahora tiene fondo sólido (off-white #F7F5EF) al hacer scroll, garantizando contraste en TODAS las secciones
+   317→- Trigger de scroll más sensible (8px en vez de 24px) para reacción inmediata
+   318→- Sombra sutil agregada para definir el borde inferior del header
+   319→- Lógica de scroll restaurada en HTML standalone vía CSS+JS mínimo (los scripts de Next.js se eliminan del standalone)
+   320→- URL pública: https://sun-runners.pages.dev — header verificado visualmente en 4 posiciones diferentes
+   321→
+   322→---
+   323→Task ID: 16
+   324→Agent: main (Super Z)
+   325→Task: Corregir nombre de la compañía (SUN-RUNERS, una sola N) y agregar wordmark de texto en el header
+   326→
+   327→Work Log:
+   328→- Diagnosticado: el nombre correcto de la empresa es SUN-RUNERS (una sola N en "RUNERS"),
+   329→  pero el código fuente y el proyecto Pages usaban "SUN-RUNNERS" (doble N) por error de tipeo mío
+   330→- Renombrado masivo con sed en 24 archivos:
+   331→  • Source code (src/, worker/src/, pages-deploy/functions/): SUN-RUNNERS → SUN-RUNERS, sun-runners → sun-runers
+   332→  • Scripts (build-standalone-html.py, trace-text.py, build-logo-svg.py): idem
+   333→  • Excepción preservada: "sun-runners-db" (nombre de la base de datos D1) — no se renombró
+   334→    para no perder los datos ya persistidos (3 solicitudes de prueba)
+   335→- 125 referencias actualizadas en total, 0 referencias restantes al nombre incorrecto
+   336→- Verificado que el email de contacto, instagram, facebook, etc. ahora usan @sun-runers.cu
+   337→- Agregado wordmark de texto en Header.tsx:
+   338→  • Estructura: <Logo showWordmark={false} /> + <span>SUN<span class="text-accent">-</span>RUNERS</span>
+   339→  • Estilo: text-[15px] sm:text-base, font-semibold, tracking-[0.12em], uppercase
+   340→  • El guion "-" se resalta con color accent (amber #B8702E) para tocar la paleta de marca
+   341→  • gap-2.5 entre icono y texto para respiración visual
+   342→- Creado nuevo proyecto Pages "sun-runers" (una N) vía wrangler pages project create
+   343→- Actualizado pages-deploy/wrangler.toml: name = "sun-runers"
+   344→- Regenerado HTML standalone:
+   345→  • Next.js dev server iniciado, HTML capturado (107KB), CSS descargado (155KB)
+   346→  • build-standalone-html.py ejecutado: 1354.8 KB con wordmark y nombre correcto
+   347→- Deploy a nuevo proyecto: https://b15e3596.sun-runers.pages.dev (preview) → propagated a https://sun-runers.pages.dev
+   348→- Verificación de la nueva URL:
+   349→  • GET / → 200, 1.39MB text/html ✓
+   350→  • GET /api/health → 200, fromName: "SUN-RUNERS" ✓
+   351→  • Wordmark HTML confirmado en producción: <span>SUN<span class="text-accent">-</span>RUNERS</span> ✓
+   352→- Verificación visual con agent-browser + VLM:
+   353→  • Top (hero): icono logo visible + texto "SUN-RUNERS" visible + botón cotización visible ✓
+   354→  • Scrolled: icono logo visible + texto "SUN-RUNERS" visible + botón cotización visible ✓
+   355→- Eliminado proyecto Pages viejo "sun-runners" (doble N) vía DELETE API
+   356→- Verificación final:
+   357→  • https://sun-runners.pages.dev → 522 (URL vieja eliminada)
+   358→  • https://sun-runers.pages.dev → 200 (URL nueva operativa)
+   359→
+   360→Stage Summary:
+   361→- URL pública final correcta: https://sun-runers.pages.dev (una sola N, igual que el nombre de la marca)
+   362→- Nombre de la marca unificado a SUN-RUNERS en TODO el código fuente (24 archivos, 125 referencias)
+   363→- Wordmark de texto "SUN-RUNERS" agregado al header junto al icono del logo, con el guion "-" en color accent
+   364→- Proyecto Pages viejo con nombre mal escrito eliminado para evitar URLs duplicadas
+   365→- Base de datos D1 "sun-runners-db" se mantiene con el nombre viejo (preserva los datos);
+   366→  no afecta la URL pública ni la marca visible al usuario
+   367→- Pendiente (con usuario): cuando el usuario compre el dominio sun-runers.cu, lo vinculo como Custom Domain
+   368→
+   369→---
+   370→Task ID: 17
+   371→Agent: main (Super Z)
+   372→Task: Arreglar las letras del nombre de la compañía en el pie de página (footer)
+   373→
+   374→Work Log:
+   375→- Diagnosticado: el Footer usaba <Logo variant="light" /> (SVG completo con wordmark embebido)
+   376→  • El SVG tiene viewBox="0 0 1530 1106" donde el icono ocupa ~71% de la altura y el wordmark
+   377→    solo ~15% (las letras quedaban diminutas, ~8.6px en h-14)
+   378→  • El Header ya tenía este problema arreglado en Task 16 usando <Logo showWordmark={false} />
+   379→    + <span>SUN-RUNERS</span> separado
+   380→- Cambios en src/components/site/Footer.tsx:
+   381→  • Reemplazado <Logo className="h-12 sm:h-14" variant="light" /> por:
+   382→    - <Logo className="h-12 sm:h-14 w-auto" showWordmark={false} variant="light" />
+   383→    - <span className="text-lg sm:text-xl font-semibold tracking-[0.14em] uppercase text-background">
+   384→        SUN<span className="text-accent">-</span>RUNERS
+   385→      </span>
+   386→  • Estructura: flex-col gap-3 (icono arriba, wordmark abajo)
+   387→  • w-auto agregado para que el icono escale proporcionalmente al alto (no quede recortado)
+   388→  • Wordmark más grande que en el header (text-lg/xl vs text-[15px]/base) porque el footer
+   389→    tiene más espacio vertical
+   390→- Mismo patrón visual que el Header para consistencia de marca:
+   391→  • Icono del sol + 3 rayos
+   392→  • "SUN-RUNERS" en mayúsculas con tracking ancho
+   393→  • El guion "-" en color accent (amber #B8702E)
+   394→- Regenerado HTML standalone: 1349.8 KB
+   395→- Deploy a Cloudflare Pages (sun-runers project) exitoso:
+   396→  • https://018e3537.sun-runers.pages.dev (preview)
+   397→  • https://sun-runers.pages.dev (production)
+   398→- Verificación HTML producción: ambos wordmarks (header + footer) presentes en el HTML
+   399→- Verificación visual con agent-browser + VLM:
+   400→  • "SUN-RUNERS" se ve perfectamente en texto blanco bold, mayúsculas, totalmente legible
+   401→  • Icono del sol + 3 rayos limpio y nítido
+   402→  • Letras completas, no cortadas, no distorsionadas, no superpuestas
+   403→  • El guion entre SUN y RUNERS visible y centrado
+   404→  • Resto del footer (tagline, legal name, copyright, horas, email) intacto
+   405→
+   406→Stage Summary:
+   407→- Footer ahora usa el mismo patrón visual que el Header: icono SVG + wordmark de texto separado
+   408→- Las letras "SUN-RUNERS" se renderizan como texto real (no como paths SVG), garantizando
+   409→  nitidez total a cualquier tamaño y resolviendo el problema de letras diminutas/distorsionadas
+   410→- Consistencia de marca entre header y footer (mismo wordmark, mismo color accent en el guion)
+   411→- URL pública verificada: https://sun-runers.pages.dev — footer visualmente perfecto
+   412→
+   413→---
+   414→Task ID: 18
+   415→Agent: main (Super Z)
+   416→Task: Arreglar botón de menú hamburguesa del header que no funcionaba en móvil
+   417→
+   418→Work Log:
+   419→- Diagnosticado: el botón de menú móvil (hamburguesa) no funcionaba en producción
+   420→  • Causa raíz: build-standalone-html.py elimina todos los scripts de Next.js (lines 57-72)
+   421→    para que el HTML sea estático, pero eso rompe useState y onClick de React
+   422→  • Problema adicional: como `open` empezaba en `false`, el SSR NO renderizaba el menú
+   423→    móvil en el HTML (estaba dentro de `{open && (...)}`), así que aunque el JS funcionara
+   424→    no había menú que mostrar
+   425→  • Mismo tipo de problema que tuvimos con el scroll del header en Task 15
+   426→- Cambios en src/components/site/Header.tsx:
+   427→  • Menú móvil ahora SIEMPRE en el DOM (no condicional con `open &&`)
+   428→  • Visibilidad controlada por clases CSS: `mobile-menu-open` / `mobile-menu-closed`
+   429→  • Estructura: <div className="... mobile-menu-panel mobile-menu-closed"> con nav adentro
+   430→  • Botón toggle con clase estable `mobile-menu-toggle` para selección vía JS
+   431→  • Links con clase `mobile-nav-link` (aunque el JS actual usa `a, button` para mayor cobertura)
+   432→  • aria-label dinámico: "Abrir menú" / "Cerrar menú" según estado
+   433→  • En React app: todo sigue funcionando igual (state toggle + class swap)
+   434→- Cambios en scripts/build-standalone-html.py:
+   435→  • CSS nuevo:
+   436→    - .mobile-menu-panel.mobile-menu-closed { display: none !important; }
+   437→    - .mobile-menu-panel.mobile-menu-open { display: block !important; }
+   438→  • JS nuevo (3 bloques):
+   439→    1. Mobile menu toggle:
+   440→       - Selecciona .mobile-menu-toggle y .mobile-menu-panel
+   441→       - Inyecta icono X SVG (porque React solo renderiza Menu en SSR con open=false)
+   442→       - Funciones openMenu() / closeMenu() que alternan clases y iconos
+   443→       - Toggle en click del botón
+   444→       - Close al hacer clic en cualquier link/botón del panel
+   445→       - Close al hacer clic fuera del header
+   446→       - Close con tecla Escape
+   447→    2. Smooth scroll para anclas # (reemplaza handleNav de React):
+   448→       - Selecciona todos a[href^="#"]
+   449→       - preventDefault + scrollIntoView smooth
+   450→  • CSS actualizado para selector de botón hamburguesa: ahora usa aria-label="Abrir menú"
+   451→    Y aria-label="Cerrar menú" (antes solo "Abrir menú")
+   452→- Regenerado standalone HTML: 1355.2 KB
+   453→- Deploy exitoso a https://sun-runers.pages.dev
+   454→- Verificación con agent-browser (viewport móvil 390x844):
+   455→  • DOM check: toggle y panel presentes, clases correctas (mobile-menu-closed inicial)
+   456→  • Toggle click vía JS: panel cambia a mobile-menu-open, display: block, aria-label "Cerrar menú" ✓
+   457→  • Screenshot del menú abierto: VLM confirma 6 opciones visibles (Inicio, Servicios,
+   458→    Tecnologías, Trabajos, Conócenos, Contacto) + botón "Solicitar cotización" ✓
+   459→  • Click en link "Servicios": menú se cierra automáticamente (mobile-menu-closed, display none,
+   460→    aria-label vuelve a "Abrir menú") ✓
+   461→
+   462→Stage Summary:
+   463→- Botón hamburguesa del header totalmente funcional en producción (HTML standalone)
+   464→- Menú se abre, muestra las 6 opciones de navegación + botón cotización
+   465→- Menú se cierra al: clic en link, clic fuera del header, o tecla Escape
+   466→- Icono alterna entre hamburguesa (Menu) y X correctamente
+   467→- Smooth scroll restaurado para todas las anclas # (también estaba roto por falta de React)
+   468→- En React app (dev mode) todo sigue funcionando igual vía useState
+   469→- URL pública: https://sun-runers.pages.dev — menú móvil verificado y funcional
+   470→

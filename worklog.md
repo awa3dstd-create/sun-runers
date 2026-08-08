@@ -467,3 +467,37 @@ Stage Summary:
 - Smooth scroll restaurado para todas las anclas # (también estaba roto por falta de React)
 - En React app (dev mode) todo sigue funcionando igual vía useState
 - URL pública: https://sun-runers.pages.dev — menú móvil verificado y funcional
+
+---
+Task ID: 19
+Agent: main (Super Z)
+Task: Crear documento de registro completo del proyecto con todos los detalles
+
+Work Log:
+- Cargado el skill de docx (SKILL.md + routes/create.md + scenes/report.md + references/common-rules.md + references/design-system.md)
+- Leído worklog.md completo (469 líneas, 12 entradas de tasks, 35.2 KB)
+- Creado script /home/z/my-project/scripts/generate-project-record.js (docx-js) con:
+  • Paleta Plain Paper adaptada a la marca SUN-RUNERS (off-white background, near-black body, amber accent #B8702E)
+  • Portada centrada con título "Documento de Registro del Proyecto", subtítulo, brand mark, y metadata (cliente, URL, fecha, versión)
+  • 7 secciones de contenido:
+    1. Resumen Ejecutivo
+    2. Información del Cliente y Cuenta (tablas con datos de Dashiell + Cloudflare)
+    3. Stack Tecnológico (frontend, backend, infraestructura, identidad de marca — 4 tablas)
+    4. Cronología Detallada de Tareas (Tasks 2, 1+3-9, 10, 7, 11, 12, 13, 14, 15, 16, 17, 18 — cada una con objetivo, trabajo realizado, resultado)
+    5. Estado Actual del Proyecto (lo que funciona + lo que no funciona)
+    6. Pendientes y Próximos Pasos (tabla de pendientes + siguiente fase de automatizaciones)
+    7. Apéndice: Estructura de Archivos (5 tablas: src/, pages-deploy/, scripts/, download/, D1 schema)
+  • Header con título del documento, footer con paginación "Página X de Y"
+  • 67 headings jerárquicos (H1, H2, H3), sin saltos de nivel
+- Ejecutado postcheck.py del skill: 8/9 checks pasados, 0 errores, 1 warning (line spacing en tablas/bullets vs body — esperado y aceptable)
+- Convertido a PDF con LibreOffice para verificación visual: 21 páginas, 250 KB
+- Verificación visual con VLM en portada y página de contenido:
+  • Portada: "diseño profesional y limpio, jerarquía tipográfica clara, paleta sobria negro+dorado"
+  • Contenido: "texto bien estructurado con encabezados jerárquicos y tablas organizadas, sin problemas de layout"
+
+Stage Summary:
+- Documento Word generado: /home/z/my-project/download/SUN-RUNERS-REGISTRO-COMPLETO.docx (29 KB, 21 páginas)
+- Contiene TODOS los detalles del proyecto: desde la investigación de marcas (Task 2) hasta el arreglo del menú móvil (Task 18)
+- Estructura profesional con portada, 7 secciones, 13+ tablas, header/footer con paginación
+- Apto como punto de restauración de contexto antes de comenzar la fase de automatizaciones
+- Script persistido en /home/z/my-project/scripts/generate-project-record.js para futuras regeneraciones
