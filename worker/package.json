@@ -1,0 +1,27 @@
+{
+  "name": "sun-runners-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de automatización SUN-RUNNERS — Cloudflare Worker + D1",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "db:execute": "wrangler d1 execute sun-runners-db --file=migrations/0001_init.sql",
+    "db:query": "wrangler d1 execute sun-runners-db --command",
+    "secret:brevo-key": "wrangler secret put BREVO_API_KEY",
+    "secret:brevo-from": "wrangler secret put BREVO_FROM_EMAIL",
+    "secret:brevo-name": "wrangler secret put BREVO_FROM_NAME",
+    "secret:brevo-notify": "wrangler secret put BREVO_NOTIFY_EMAIL",
+    "secret:whatsapp": "wrangler secret put WHATSAPP_PUBLIC_NUMBER"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260801.0",
+    "typescript": "^5.5.0",
+    "wrangler": "^4.120.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20260801.1": true
+  }
+}
