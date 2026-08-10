@@ -1,0 +1,13 @@
+name = "sun-runers"
+compatibility_date = "2024-12-01"
+
+# Servir assets estáticos desde ./public
+# Esto crea un Worker que sirve el HTML estático desde workers.dev
+# (rango de IPs distinto a pages.dev — útil si ETECSA bloquea pages.dev)
+[assets]
+directory = "./public"
+not_found_handling = "single-page-application"
+
+# El Worker no necesita código adicional — solo sirve assets estáticos.
+# Pero podemos añadir lógica de routing más adelante si hace falta.
+main = "./worker.js"
