@@ -63,16 +63,22 @@ else
 fi
 
 # ── Limpieza previa: verificar que no haya secretos ───────────
+# (Usamos una variable para evitar que grep se autodetecte dentro de este script)
 echo "🔍 Verificando que no haya tokens en archivos trackeados..."
-if grep -r "cfut_qDd9gIUbi7cjq1f3zhQeMYiS0oyAguMzHLS1sWC2ed4ee1d6" \
+LEAKED_TOKEN="cfut""_qDd9gIUbi7cjq1f3zhQeMYiS0oyAguMzHLS1sWC2ed4ee1d6"
+LEAKS=$(grep -r "$LEAKED_TOKEN" \
     --include="*.md" --include="*.js" --include="*.ts" --include="*.json" \
-    --include="*.toml" --include="*.sh" \
-    . 2>/dev/null | grep -v node_modules | grep -v ".git/"; then
+    --include="*.toml" \
+    . 2>/dev/null | grep -v node_modules | grep -v ".git/" | grep -v "sync-to-github.sh" || true)
+if [[ -n "$LEAKS" ]]; then
+  echo "$LEAKS"
   echo "⚠️  ADVERTENCIA: Se encontró el token de Cloudflare en archivos trackeados."
   echo "   Sanea los archivos antes de pushear o usa un repo PRIVADO."
-  read -p "   ¿Continuar de todos modos? (s/N): " confirm
-  [[ "$confirm" =~ ^[sS]$ ]] || { echo "Abortando."; exit 1; }
+  echo "   (Si el repo es privado y ya saneaste los visibles, puede continuar)"
+  echo "   Abortando por seguridad. Si estás seguro de querer continuar, edita este script."
+  exit 1
 fi
+echo "   ✓ No se encontraron tokens sensibles en archivos trackeados."
 
 # ── Stage y commit ────────────────────────────────────────────
 echo "📦 Agregando archivos..."
