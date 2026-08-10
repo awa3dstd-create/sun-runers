@@ -335,12 +335,13 @@ export const PORTFOLIO: PortfolioItem[] = [
 export const ENGINEERS_PUBLIC: EngineerPublic[] = [
   {
     id: "ing-1",
-    name: "Ing. — —",
+    name: "Reinier Barionuevo",
     role: "Director Técnico",
-    initials: "—",
+    initials: "RB",
     experienceYears: 0,
     specialties: ["Por actualizar"],
     bio: "Espacio reservado para la biografía del ingeniero. Este perfil será actualizado con la información profesional completa, años de experiencia, formación académica y proyectos destacados.",
+    photo: "/assets/team/reinier.jpg",
   },
   {
     id: "ing-2",
