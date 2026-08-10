@@ -52,3 +52,18 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Z.ai platform artifacts (no aportan al repo)
+/tool-results/
+/research_*.json
+/db/
+/examples/
+/mini-services/
+/upload/
+
+# Large binary deliverables (available in /download/ as final artifacts)
+/download/sun-runners-src.zip
+/download/sun-runers-preview.html
+
+# Keep .env.example tracked, but never the real .env
+!.env.example

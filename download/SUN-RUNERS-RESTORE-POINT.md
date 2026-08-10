@@ -41,7 +41,7 @@ Construcción de un sitio web profesional minimalista para **SUN-RUNNERS**, empr
 - **Account ID:** `29b40f5c76f58a5e101d22226337cf46`
 - **D1 Database ID:** `84368f8a-9c9b-44af-bbf2-c86895ba2e11`
 - **D1 Database Name:** `sun-runners-db`
-- **API Token:** `cfut_qDd9gIUbi7cjq1f3zhQeMYiS0oyAguMzHLS1sWC2ed4ee1d6`
+- **API Token:** `[REVOCADO POR SEGURIDAD — generar nuevo token en https://dash.cloudflare.com/profile/api-tokens si se necesita]`
   - Permisos: Workers Scripts Edit, D1 Edit, Workers KV Storage Edit, Workers Routes Edit, R2 Edit, Pages Edit, Containers Edit, Builds Edit, Agents Edit, Observability Edit
   - TTL: Sin expiración configurada
   - **⚠️ REVOCAR este token cuando terminemos el deploy** (en https://dash.cloudflare.com/profile/api-tokens)
@@ -275,7 +275,7 @@ URL con Account ID y Database ID: `https://dash.cloudflare.com/29b40f5c76f58a5e1
 **Acción tomada:** Analizada con VLM. Confirmados permisos correctos. Recomendado continuar.
 
 ### Mensaje 13 (usuario) — Token + 3 pedidos
-"cfut_qDd9gIUbi7cjq1f3zhQeMYiS0oyAguMzHLS1sWC2ed4ee1d6. Cuando implementes coloca las imágenes que habías colocado anteriormente. y dame el link para verla. Crea un punto de restauración que tenga toda la información de nuestro historial del chat, claves API, en fin toda la información detallada y necesaria para que si por alguna casualidad pierdes la memoria o este chat se crachea o tiene problema, pueda subirla a otro chat y continue siguiendo el mismo hilo actual"
+"[token Cloudflare revocado por seguridad]. Cuando implementes coloca las imágenes que habías colocado anteriormente. y dame el link para verla. Crea un punto de restauración que tenga toda la información de nuestro historial del chat, claves API, en fin toda la información detallada y necesaria para que si por alguna casualidad pierdes la memoria o este chat se crachea o tiene problema, pueda subirla a otro chat y continue siguiendo el mismo hilo actual"
 
 **Acción tomada:** Este documento. Luego: implementar Worker, deployar, regenerar preview HTML.
 

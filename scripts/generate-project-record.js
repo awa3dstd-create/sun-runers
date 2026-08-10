@@ -350,7 +350,7 @@ function buildBody() {
       ["Subdominio de cuenta", "dashiellyeneri (no se puede cambiar; afectaría otra app del usuario)"],
       ["D1 Database ID", "84368f8a-9c9b-44af-bbf2-c86895ba2e11"],
       ["D1 Database Name", "sun-runers-db (nombre histórico, se mantiene para preservar datos)"],
-      ["API Token", "cfut_qDd9gIUbi7cjq1f3zhQeMYiS0oyAguMzHLS1sWC2ed4ee1d6"],
+      ["API Token", "[REVOCADO — ver .env o dashboard de Cloudflare]"],
       ["Token TTL", "Sin expiración configurada"],
       ["Token permisos", "Workers Scripts Edit, D1 Edit, Workers KV Storage Edit, Workers Routes Edit, R2 Edit, Pages Edit, Containers Edit, Builds Edit, Agents Edit, Observability Edit"],
       ["Dashboard URL", "https://dash.cloudflare.com/29b40f5c76f58a5e101d22226337cf46"],
