@@ -766,3 +766,45 @@ Stage Summary:
 - github.io es la más confiable desde Cuba (casi nunca bloqueado)
 - El token de Cloudflare (cfut_cSioc...) está activo y se puede reusar para futuros redeploys
   del Worker cuando se actualice el sitio (ejecutar deploy-worker-mirror.sh de nuevo)
+
+---
+Task ID: 25
+Agent: main (Super Z)
+Task: Implementar auto-failover JS en github.io (Opción C) — redirect automático a mirrors
+
+Work Log:
+- Análisis del problema:
+  • Usuario quiere compartir UNA sola URL y que el failover sea automático
+  • Si ETECSA bloquea pages.dev, el navegador no recibe HTML — no hay JS que pueda correr
+  • Solución: la URL de entrada debe estar en github.io (casi nunca bloqueado)
+  • Desde github.io, JS prueba si pages.dev responde → redirige si sí, se queda si no
+- Implementación:
+  • Creado scripts/inject-failover.py — inyecta script JS en <head> del HTML
+  • Script JS (987 bytes):
+    - Solo corre si hostname contiene 'github.io' (no corre en pages.dev ni workers.dev)
+    - Hace fetch no-cors a https://sun-runers.pages.dev/ con timeout 2s
+    - Si responde en <2s → window.location.replace() a pages.dev (CDN más rápido)
+    - A los 1s, si pages.dev no ha respondido, prueba workers.dev como backup
+    - Si ningún mirror responde en 2s → se queda en github.io (que ya cargó)
+  • Actualizado scripts/deploy-gh-pages.sh para llamar inject-failover.py antes del commit
+- Deploy:
+  • Ejecutado deploy-gh-pages.sh con PAT
+  • Push exitoso: fb00173..213bb30 en rama gh-pages
+  • Tamaño HTML: 1,847,581 → 1,848,568 bytes (+987 bytes del script)
+- Verificación:
+  • GitHub Pages sirvió versión cacheada por ~30s, luego propagó
+  • Confirmado con curl: script de failover presente (987 chars)
+  • URLs en el script: pages.dev y workers.dev ✓
+  • HTTP 200, 1.85 MB, título correcto
+
+Stage Summary:
+- ✅ Auto-failover activo en https://awa3dstd-create.github.io/sun-runers/
+- Flujo del usuario:
+  1. Entra a github.io/sun-runers/ (siempre carga — github.io no está bloqueado)
+  2. JS prueba pages.dev en segundo plano
+  3. Si pages.dev responde rápido (<2s) → redirect automático (CDN más rápido)
+  4. Si no → se queda en github.io (que ya está cargado y visible)
+  5. Backup: si pages.dev no responde en 1s, prueba workers.dev
+- Usuario solo necesita compartir UNA URL: https://awa3dstd-create.github.io/sun-runers/
+- El failover es transparente — el usuario no tiene que hacer nada
+- Para futuros deploys: deploy-gh-pages.sh ahora inyecta el JS automáticamente
