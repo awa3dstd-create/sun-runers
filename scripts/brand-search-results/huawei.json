@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "Huawei SUN2000 solar string inverter",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/57e99f11f6c7.png",
+      "caption": "",
+      "source": "Huawei",
+      "original_width": "1040px",
+      "original_height": "1040px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e46913ac6b2f.jpg",
+      "caption": "",
+      "source": "CiFiSUN Energy Co., LTD",
+      "original_width": "1000px",
+      "original_height": "1000px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f0d14cef67cf.png",
+      "caption": "",
+      "source": "Smart Tech Distributors",
+      "original_width": "873px",
+      "original_height": "970px"
+    }
+  ]
+}

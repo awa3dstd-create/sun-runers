@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "SolaX X-Hybrid solar inverter wall mounted",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a6e994f03e98.jpg",
+      "caption": "",
+      "source": "eBay",
+      "original_width": "900px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/6776f9614404.jpg",
+      "caption": "",
+      "source": "Wattuneed",
+      "original_width": "1280px",
+      "original_height": "720px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ec657ec2dd35.png",
+      "caption": "",
+      "source": "AIZO Quality Heating",
+      "original_width": "1160px",
+      "original_height": "1160px"
+    }
+  ]
+}

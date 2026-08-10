@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "Easun ISolar SM off-grid solar inverter",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c96fe2fc62d4.jpg",
+      "caption": "",
+      "source": "Easun Power",
+      "original_width": "1600px",
+      "original_height": "1600px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/cf0789d591bf.jpg",
+      "caption": "",
+      "source": "Easun Power",
+      "original_width": "950px",
+      "original_height": "1707px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/6d9973b40ff6.jpeg",
+      "caption": "",
+      "source": "Solid Volt",
+      "original_width": "1220px",
+      "original_height": "893px"
+    }
+  ]
+}

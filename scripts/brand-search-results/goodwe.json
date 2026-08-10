@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "GoodWe ES G2 hybrid solar inverter",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/5aa5fa393cea.jpg",
+      "caption": "",
+      "source": "GoodWe",
+      "original_width": "2068px",
+      "original_height": "1241px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a7142cdcf4a4.png",
+      "caption": "",
+      "source": "GoodWe",
+      "original_width": "1020px",
+      "original_height": "1300px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e99855bf21cb.png",
+      "caption": "",
+      "source": "Alibaba.com",
+      "original_width": "1000px",
+      "original_height": "1000px"
+    }
+  ]
+}

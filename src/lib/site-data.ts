@@ -136,6 +136,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "Híbrido 4 kW · 3.6 kW (24V / 48V)",
     notes: "Muy popular en redes sociales cubanas. Híbridos compactos para residencial.",
+    image: "/assets/brands/sunri.jpg",
   },
   {
     name: "BC Energy",
@@ -151,6 +152,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "5 KW · 6.4 KW · 10 KW (48V)",
     notes: "Inversores de 5–10 kW para residencias medianas y comerciales.",
+    image: "/assets/brands/sunshine.jpg",
   },
   {
     name: "Deye",
@@ -198,6 +200,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor + Batería",
     lines: "Cubix100 48V · Inversores 3–5 kW",
     notes: "Solución económica todo-en-uno para residencial pequeño.",
+    image: "/assets/brands/eco-worthy.jpg",
   },
   {
     name: "GoodWe",
@@ -205,6 +208,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "ES G2 · EM Series",
     notes: "Híbridos bidireccionales premium con gestión de energía avanzada.",
+    image: "/assets/brands/goodwe.jpg",
   },
   {
     name: "SolaX",
@@ -212,6 +216,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "X-Hybrid · SK-SU",
     notes: "Híbridos con respaldo nativo y monitoreo en la nube.",
+    image: "/assets/brands/solax.jpg",
   },
   {
     name: "SRNE",
@@ -219,6 +224,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "HESP · ML24/48",
     notes: "Inversores híbridos económicos, muy usados en zonas rurales.",
+    image: "/assets/brands/srne.jpg",
   },
   {
     name: "Easun",
@@ -226,6 +232,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "ISolar SM · SHP",
     notes: "Off-grid fabricado por Voltronic. Buena relación precio/prestaciones.",
+    image: "/assets/brands/easun.jpg",
   },
   {
     name: "Victron Energy",
@@ -241,6 +248,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "SUN2000 (3–10 KTL)",
     notes: "Inversores string de alta eficiencia. Presencia creciente en Cuba.",
+    image: "/assets/brands/huawei.jpg",
   },
 ];
 

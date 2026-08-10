@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "Eco-Worthy solar inverter battery system",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/fc52b473fb42.jpg",
+      "caption": "",
+      "source": "eBay",
+      "original_width": "1200px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8ecda6772d8e.jpg",
+      "caption": "",
+      "source": "eco-worthy-ca",
+      "original_width": "1600px",
+      "original_height": "1600px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d6ef291b00ef.jpg",
+      "caption": "",
+      "source": "eco-worthy-uk",
+      "original_width": "1600px",
+      "original_height": "1600px"
+    }
+  ]
+}

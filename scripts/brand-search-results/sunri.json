@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "Sunri hybrid solar inverter 4kW 48V",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/19388b623aa1.jpg",
+      "caption": "",
+      "source": "Alibaba.com",
+      "original_width": "750px",
+      "original_height": "1100px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/eb719fddbb26.jpg",
+      "caption": "",
+      "source": "Alibaba.com",
+      "original_width": "750px",
+      "original_height": "1100px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/4908256eedb2.png",
+      "caption": "",
+      "source": "Sunboost",
+      "original_width": "2000px",
+      "original_height": "714px"
+    }
+  ]
+}

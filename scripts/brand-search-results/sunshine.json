@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "query": "Sunshine solar inverter 5kW 48V off-grid",
+  "count": 3,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9e1d25857bda.jpg",
+      "caption": "",
+      "source": "Eco Sources",
+      "original_width": "1000px",
+      "original_height": "1000px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/4eb1440119b4.png",
+      "caption": "",
+      "source": "Zhejiang Kaimin Electric Co., Ltd.",
+      "original_width": "1500px",
+      "original_height": "1500px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8551a8b1b88e.jpg",
+      "caption": "",
+      "source": "Suoer Solar Inverters & Power Inverters",
+      "original_width": "1000px",
+      "original_height": "1000px"
+    }
+  ]
+}
