@@ -808,3 +808,65 @@ Stage Summary:
 - Usuario solo necesita compartir UNA URL: https://awa3dstd-create.github.io/sun-runers/
 - El failover es transparente — el usuario no tiene que hacer nada
 - Para futuros deploys: deploy-gh-pages.sh ahora inyecta el JS automáticamente
+
+---
+Task ID: 26
+Agent: main (Super Z)
+Task: Completar imágenes de las 8 marcas restantes en sección Tecnologías
+
+Work Log:
+- Identificación de marcas sin imagen en site-data.ts:
+  • CON imagen (8): MUST, BC Energy, Deye, Growatt, Felicity Solar, Pylontech, Voltronic, Victron
+  • SIN imagen (8): Sunri, Sunshine, Eco-Worthy, GoodWe, SolaX, SRNE, Easun, Huawei
+- Búsqueda de imágenes con z-ai image-search:
+  • Primer intento en paralelo falló con HTTP 429 (Too Many Requests)
+  • Creado scripts/download-brand-images.py con búsqueda secuencial + pausa 5s entre marcas
+  • Fix: el flag -o del CLI no escribe archivo cuando se ejecuta como subprocess;
+    cambiado a capturar stdout y extraer JSON manualmente
+  • 8/8 imágenes descargadas exitosamente
+- Optimización con PIL:
+  • Resize a max 600x600 manteniendo aspect ratio
+  • Centradas en canvas cuadrado 600x600 con fondo blanco
+  • JPEG quality 78, progressive, optimize
+  • Tamaños: 12 KB (huawei) a 61 KB (sunshine), total ~220 KB
+- Verificación visual con VLM (z-ai vision):
+  • Todas las 8 imágenes son equipos solares reales relevantes:
+    - sunri: inversor híbrido
+    - sunshine: kit solar completo (paneles + batería + inversor)
+    - eco-worthy: kit solar completo
+    - goodwe: inversor GoodWe + batería
+    - solax: inversor SolaX
+    - srne: inversor híbrido similar
+    - easun: inversor solar
+    - huawei: inversor o batería solar
+- Actualización de src/lib/site-data.ts:
+  • Añadido campo image: "/assets/brands/<slug>.jpg" a las 8 marcas
+  • Ahora las 16 marcas tienen imagen
+- Technologies.tsx no requirió cambios:
+  • Ya filtraba dinámicamente con BRANDS.filter((b) => b.image)
+  • La sección "Otras marcas disponibles" desaparece automáticamente cuando sin imagen = 0
+- Build standalone HTML:
+  • Fix: URL de CSS cambió en Next.js 16 (chunks/[root-of-the-server]__*.css)
+  • Descargado CSS correcto (157 KB) a /tmp/sun-runers.css
+  • Build exitoso: 1.85 MB → 2.41 MB (+564 KB por 8 imágenes como data URIs)
+  • 39 data URIs JPEG total en el HTML
+- Deploy a los 3 mirrors:
+  • Cloudflare Pages: 9 archivos nuevos subidos, deploy exitoso (2.47 MB)
+  • GitHub Pages: rama gh-pages actualizada con failover JS, push exitoso
+  • Worker: 9 archivos nuevos subidos, deploy exitoso (2.47 MB)
+- Verificación visual con agent-browser + VLM:
+  • Navegado a https://sun-runers.pages.dev/, screenshot de sección Tecnologías
+  • VLM confirma: 16 tarjetas con imagen en grid 4x4
+  • VLM confirma: NO aparece sección "Otras marcas disponibles"
+  • Marcas reconocidas: MUST, BC Energy, Sunshine, Deye, Growatt, Felicity, Pylontech,
+    Voltronic, Eco-Worthy, GoodWe, SolaX, SRNE, Easun, Victron, Huawei, Sunri ✓
+
+Stage Summary:
+- ✅ Sección Tecnologías ahora muestra 16 tarjetas con foto (grid responsivo 1/2/4 columnas)
+- ✅ Sección "Otras marcas disponibles" eliminada automáticamente
+- ✅ Las 3 URLs espejo actualizadas y verificadas:
+  1. https://sun-runers.pages.dev (2.47 MB)
+  2. https://awa3dstd-create.github.io/sun-runers/ (2.47 MB, con failover JS)
+  3. https://sun-runers.dashiellyeneri.workers.dev (2.47 MB)
+- ✅ Sincronizado con GitHub (rama main)
+- Pendiente (siguiente tarea del usuario): automatizaciones para cotizaciones y respuestas a clientes
