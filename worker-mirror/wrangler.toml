@@ -8,6 +8,6 @@ compatibility_date = "2024-12-01"
 directory = "./public"
 not_found_handling = "single-page-application"
 
-# El Worker no necesita código adicional — solo sirve assets estáticos.
-# Pero podemos añadir lógica de routing más adelante si hace falta.
-main = "./worker.js"
+# Sin `main` — el Worker se sirve puramente como assets estáticos.
+# Si en el futuro necesitamos lógica de routing (ej. reescribir URLs),
+# añadiremos main + binding ASSETS para delegar a los assets.

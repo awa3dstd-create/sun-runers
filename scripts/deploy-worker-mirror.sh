@@ -24,7 +24,7 @@ DEPLOY_DIR="/home/z/my-project/pages-deploy/public"
 echo "=== Deploy Worker espejo a Cloudflare ==="
 echo "Account ID: ${CF_ACCOUNT_ID}"
 echo "Worker:     sun-runers"
-echo "URL final:  https://sun-runers.workers.dev"
+echo "URL final:  https://sun-runers.dashiellyeneri.workers.dev (depende del account)"
 echo ""
 
 # 1. Sincronizar el directorio ./public del worker con pages-deploy/public

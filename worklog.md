@@ -731,3 +731,38 @@ Stage Summary:
   2. Crear nuevo API token de Cloudflare con permiso "Edit Cloudflare Workers"
      en https://dash.cloudflare.com/profile/api-tokens
      y pasarlo al asistente para ejecutar deploy-worker-mirror.sh
+
+---
+Task ID: 24
+Agent: main (Super Z)
+Task: Completar deploy espejo — GitHub Pages (activación manual) + Cloudflare Worker
+
+Work Log:
+- GitHub Pages:
+  • Usuario confirmó haber cambiado el repo a público (necesario para Pages en cuenta gratuita)
+  • Usuario activó Pages desde Settings → Pages → Source: Deploy from a branch → Branch: gh-pages / (root)
+  • Verificación desde servidor: HTTP 200, 1.85 MB, título correcto, todos los assets cargando
+  • URL final confirmada: https://awa3dstd-create.github.io/sun-runers/
+- Cloudflare Worker:
+  • Usuario generó nuevo API token (cfut_cSioc...) con permiso Edit Cloudflare Workers
+  • Primera ejecución de deploy-worker-mirror.sh:
+    - 33 archivos subidos a Worker sun-runers (1.57s)
+    - Deploy exitoso en https://sun-runers.dashiellyeneri.workers.dev
+    - PERO: verificación falló — Worker devolvía HTTP 404 con 17 bytes ("error code: 1042")
+  • Diagnóstico: el main = "./worker.js" con código de fallback 404 interceptaba todas las requests
+    antes de que el binding [assets] sirviera los archivos
+  • Fix: eliminado worker.js y removido `main` del wrangler.toml — ahora el Worker es puramente
+    un sitio estático servido por el binding [assets]
+  • Segunda ejecución: deploy exitoso, sin re-upload de assets (ya estaban cacheados)
+  • Verificación: HTTP 200, 1.85 MB, título correcto, todos los assets (hero, must.jpg, logo.svg) cargando
+  • URL final: https://sun-runers.dashiellyeneri.workers.dev
+
+Stage Summary:
+- ✅ Tres URLs espejo activas y verificadas desde servidor:
+  1. https://sun-runers.pages.dev (Cloudflare Pages — variable desde Cuba)
+  2. https://awa3dstd-create.github.io/sun-runers/ (GitHub Pages — baja probabilidad de bloqueo)
+  3. https://sun-runers.dashiellyeneri.workers.dev (Cloudflare Worker — medio/bajo)
+- Si ETECSA bloquea una URL, el cliente puede probar las otras dos
+- github.io es la más confiable desde Cuba (casi nunca bloqueado)
+- El token de Cloudflare (cfut_cSioc...) está activo y se puede reusar para futuros redeploys
+  del Worker cuando se actualice el sitio (ejecutar deploy-worker-mirror.sh de nuevo)
