@@ -24,6 +24,8 @@ export interface Brand {
   category: "Inversor" | "Batería" | "Inversor + Batería" | "Distribuidor";
   lines: string;
   notes: string;
+  /** Ruta relativa a /public de la imagen del equipo (opcional). */
+  image?: string;
 }
 
 export interface PortfolioItem {

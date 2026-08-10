@@ -128,6 +128,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor + Batería",
     lines: "PV1800 VHM · HBP1800 OLV · 6KW 51.2V",
     notes: "Marca más instalada en Cuba. Híbridos 5–6 kW con MPPT 80 A y bancos LiFePO4 integrados.",
+    image: "/assets/brands/must.jpg",
   },
   {
     name: "Sunri",
@@ -142,6 +143,7 @@ export const BRANDS: Brand[] = [
     category: "Distribuidor",
     lines: "Kits Sumry 4K + MUST + LONGi",
     notes: "MIPYME cubana que comercializa kits completos con paneles LONGi 615 W.",
+    image: "/assets/brands/longi.jpg",
   },
   {
     name: "Sunshine",
@@ -156,6 +158,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "Sun-3K–8K SG01 · Hybrid",
     notes: "Eficiencia 97–99 %. Comúnmente emparejado con baterías Pylontech.",
+    image: "/assets/brands/deye.jpg",
   },
   {
     name: "Growatt",
@@ -163,6 +166,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "SPF 3000–5000 ES · MOD",
     notes: "Híbridos off-grid muy adoptados en Cuba por su relación precio/prestaciones.",
+    image: "/assets/brands/growatt.jpg",
   },
   {
     name: "Felicity Solar",
@@ -170,6 +174,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor + Batería",
     lines: "IVPM · FLA24200 5 kWh",
     notes: "Distribuidor oficial en Cuba (SunCar). Línea integrada inversor + batería.",
+    image: "/assets/brands/felicity.jpg",
   },
   {
     name: "Pylontech",
@@ -177,6 +182,7 @@ export const BRANDS: Brand[] = [
     category: "Batería",
     lines: "US2000C · US3000C · US5000 · UF5000",
     notes: "Batería LiFePO4 modular. Compatibilidad universal con Deye, Growatt, Voltronic, Victron.",
+    image: "/assets/brands/pylontech.jpg",
   },
   {
     name: "Voltronic / Axpert",
@@ -184,6 +190,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor",
     lines: "Axpert MKS · VMIII · MAX",
     notes: "Fabricante ODM que abastece a MPP Solar, Easun y otros. Off-grid robusto.",
+    image: "/assets/brands/voltronic.jpg",
   },
   {
     name: "Eco-Worthy",
@@ -226,6 +233,7 @@ export const BRANDS: Brand[] = [
     category: "Inversor + Batería",
     lines: "MultiPlus-II · Cerbo GX",
     notes: "Premium europeo. Soluciones modulares para residencias exigentes.",
+    image: "/assets/brands/victron.jpg",
   },
   {
     name: "Huawei",

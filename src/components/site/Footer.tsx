@@ -14,7 +14,7 @@ export function Footer({ onNavClick }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12">
           {/* Marca */}
           <div className="md:col-span-5">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-start gap-3">
               <Logo className="h-12 sm:h-14 w-auto" showWordmark={false} variant="light" />
               <span className="text-lg sm:text-xl font-semibold tracking-[0.14em] uppercase text-background">
                 SUN<span className="text-accent">-</span>RUNERS

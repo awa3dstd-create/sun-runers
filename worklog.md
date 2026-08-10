@@ -632,3 +632,56 @@ IMPORTANTE PARA RECUPERACIÓN FUTURA:
    Lee README.md, worklog.md y download/SUN-RUNERS-RESTORE-POINT.md para recuperar contexto."
 - El asistente necesitará el PAT de GitHub para clonar si el repo es privado.
   El usuario debe proporcionarlo en el nuevo chat.
+
+---
+Task ID: 22
+Agent: main (Super Z)
+Task: Añadir imágenes reales de equipos en sección Tecnologías + arreglar logo del footer (izquierda + nombre debajo)
+
+Work Log:
+- Búsqueda de imágenes reales de equipos con z-ai image-search (8 búsquedas en paralelo):
+  • MUST PV1800 VHM híbrido
+  • Deye SUN-3K SG01 híbrido
+  • Growatt SPF 5000 ES off-grid
+  • Pylontech US5000 batería LiFePO4
+  • Victron MultiPlus-II inverter/charger
+  • LONGi Hi-MO panel 615W
+  • Felicity Solar IVPM híbrido
+  • Voltronic Axpert off-grid
+- Descarga de 8 imágenes a /home/z/my-project/public/assets/brands/
+- Optimización con PIL (Python):
+  • Resize a max 600x600
+  • Calidad JPEG 78, progressive, strip metadata
+  • Reducción masiva de tamaño (ej: pylontech 2.2MB → 42KB)
+  • Total: 8 imágenes, ~170 KB combinados
+- Modificación de src/lib/types.ts: añadido campo opcional `image?: string` al interface Brand
+- Modificación de src/lib/site-data.ts: añadida ruta de imagen a 8 marcas (las que tienen foto):
+  MUST, BC Energy (longi.jpg), Deye, Growatt, Felicity Solar, Pylontech, Voltronic, Victron
+- Rediseño completo de src/components/site/Technologies.tsx:
+  • Reemplazada la tabla de filas por grid de tarjetas (sm:grid-cols-2 lg:grid-cols-4)
+  • Cada tarjeta tiene imagen cuadrada (aspect-square) + nombre + origen + categoría + líneas + notas
+  • Hover effect: bg-highlight + scale-105 en imagen + border accent
+  • Marcas sin imagen (8 restantes) agrupadas en sección compacta "Otras marcas disponibles"
+- Modificación de src/components/site/Footer.tsx:
+  • Añadido `items-start` al contenedor flex-col del logo + nombre
+  • Esto alinea el logo y el texto a la izquierda (antes estaban centrados por stretch default)
+- Mejoras a scripts/build-standalone-html.py:
+  • Nuevo bloque 3b: decodifica URLs /_next/image?url=%2Fassets%2F...&w=...&q=... y las reemplaza con data URI directa (maneja &amp; entities)
+  • Nuevo bloque 3c: reemplaza srcSet (React usa camelCase) tomando solo la primera entrada del srcset para evitar 10x duplicación de data URIs
+  • Resultado: 0 URLs _next/image restantes, 23 data URIs JPEG embebidas
+- Deploy a Cloudflare Pages con problema inicial:
+  • Primer deploy subió HTML pero producción seguía sirviendo versión vieja (1.38MB vs 1.85MB local)
+  • Causa raíz: wrangler tomaba ./public/ del directorio actual pero faltaba copiar las imágenes a pages-deploy/public/assets/brands/
+  • Fix: copiadas 8 imágenes a pages-deploy/public/assets/brands/ y deployado con `wrangler pages deploy public` (directorio explícito)
+  • Deploy final: 33 archivos subidos (26 existentes + 8 nuevas imágenes - 1 HTML actualizado)
+- Verificación visual con agent-browser + VLM:
+  • Tech section: VLM confirma "8 tarjetas con fotografías reales de equipos solares" + reconoce MUST, BC Energy, Deye, Growatt, Felicity Solar, Pylontech, Voltronic, Victron ✓
+  • Footer: VLM confirma "logo está a la izquierda, texto SUN-RUNERS está debajo del logo" ✓
+
+Stage Summary:
+- Sección Tecnologías ahora muestra 8 tarjetas con fotografías reales de equipos en grid responsivo (1 col mobile, 2 col tablet, 4 col desktop)
+- 8 marcas adicionales sin imagen agrupadas en sección "Otras marcas disponibles" (lista compacta)
+- Footer con logo alineado a la izquierda + texto "SUN-RUNERS" debajo (no centrado, no al lado)
+- HTML standalone: 1.85 MB (incluye 23 imágenes JPEG embebidas como data URIs)
+- URL pública verificada: https://sun-runers.pages.dev — ambas correcciones visuales confirmadas con VLM
+- Pendiente: commit + sync GitHub

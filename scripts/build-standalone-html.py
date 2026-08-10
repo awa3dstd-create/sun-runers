@@ -88,6 +88,69 @@ def main():
         html,
     )
 
+    # 3b. Next.js Image component genera URLs como /_next/image?url=%2Fassets%2F...&w=...&q=...
+    #     Decodificar la URL interna y reemplazar con data URI directa.
+    #     Maneja también &amp; (entidades HTML) en vez de &.
+    def decode_next_image_url(next_url: str) -> str | None:
+        """Decodifica una URL /_next/image?url=...&w=...&q=... y devuelve la ruta del asset si existe."""
+        # Decodificar entidades HTML
+        next_url = next_url.replace('&amp;', '&')
+        # Buscar el parámetro url=
+        m = re.search(r'url=([^&]+)', next_url)
+        if not m:
+            return None
+        url_param = m.group(1)
+        # Decodificar URL-encoded
+        decoded = re.sub(r'%2F', '/', url_param)
+        decoded = re.sub(r'%3F', '?', decoded)
+        decoded = re.sub(r'%3D', '=', decoded)
+        decoded = re.sub(r'%26', '&', decoded)
+        # Extraer la ruta del asset (antes del ? si existe)
+        asset_path_str = decoded.split('?')[0].lstrip('/')
+        asset_path = PUBLIC_DIR / asset_path_str
+        if asset_path.exists():
+            return str(asset_path)
+        return None
+
+    # Reemplazar src="/_next/image?url=..." (single src attribute)
+    def replace_next_image_src(match):
+        path = decode_next_image_url(match.group(0))
+        if path:
+            return f'src="{encode_image_data_uri(Path(path))}"'
+        return match.group(0)
+
+    html = re.sub(
+        r'src="/_next/image\?url=[^"]*"',
+        replace_next_image_src,
+        html,
+    )
+
+    # 3c. Reemplazar srcset="/_next/image?url=... 256w, /_next/image?url=... 384w, ..."
+    #     (React usa srcSet con mayúscula S — case-insensitive para cubrir ambos)
+    #     Como todas las URLs del srcset apuntan al mismo archivo (con diferentes w),
+    #     usamos solo la primera entrada con el data URI; las demás son redundantes
+    #     cuando ya está todo embebido como data URI (no hay fetching de URLs).
+    def replace_srcset(match):
+        attr_name = match.group(1)  # 'srcset' o 'srcSet'
+        srcset_value = match.group(2)
+        # Tomar solo la primera entrada del srcset
+        first_part = srcset_value.split(', ')[0]
+        url_and_descriptor = first_part.rsplit(' ', 1)
+        if len(url_and_descriptor) == 2:
+            url, descriptor = url_and_descriptor
+            path = decode_next_image_url(url)
+            if path:
+                data_uri = encode_image_data_uri(Path(path))
+                return f'{attr_name}="{data_uri} {descriptor}"'
+        # Fallback: dejar el srcset original
+        return match.group(0)
+
+    html = re.sub(
+        r'(srcSet|srcset)="([^"]*?/_next/image\?url=[^"]+)"',
+        replace_srcset,
+        html,
+    )
+
     # url(/assets/...) en CSS ya inlineado
     html = re.sub(
         r'url\((/(?:assets|favicon\.svg|sun-runers-logo[^)]*\.svg|logo\.svg)[^)]*)\)',
