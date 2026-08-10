@@ -48,6 +48,12 @@ rm -rf .git/index 2>/dev/null || true
 echo "→ Copiando ${DEPLOY_DIR} → ${WORK_TREE}/..."
 cp -r "${DEPLOY_DIR}/." "${WORK_TREE}/"
 
+# 4b. Inyectar JS de auto-failover en index.html
+#     (solo la versión de gh-pages lleva el failover; pages.dev y workers.dev
+#      son los destinos del redirect y no deben llevar el script)
+echo "→ Inyectando auto-failover JS en index.html..."
+python3 /home/z/my-project/scripts/inject-failover.py "${WORK_TREE}/index.html"
+
 # 5. Añadir .nojekyll para que GitHub Pages no procese Jekyll
 #    (evita que los archivos que empiezan con _ sean ignorados)
 touch "${WORK_TREE}/.nojekyll"
