@@ -685,3 +685,49 @@ Stage Summary:
 - HTML standalone: 1.85 MB (incluye 23 imágenes JPEG embebidas como data URIs)
 - URL pública verificada: https://sun-runers.pages.dev — ambas correcciones visuales confirmadas con VLM
 - Pendiente: commit + sync GitHub
+
+---
+Task ID: 23
+Agent: main (Super Z)
+Task: Crear despliegue espejo en múltiples hosts para evitar bloqueo ETECSA (Cuba) — Opción 2: Worker + GitHub Pages
+
+Work Log:
+- Diagnóstico del problema de acceso desde Cuba:
+  • ETECSA bloquea dominios compartidos por oleadas — `pages.dev` aloja millones de sitios
+  • Cuando bloquean uno, a veces bloquean todo el dominio `pages.dev`
+  • No es problema del sitio ni del despliegue — es filtrado del lado de ETECSA
+  • Solución: publicar el mismo sitio en múltiples hosts con dominios distintos
+- Verificación de rutas relativas en HTML standalone:
+  • 0 rutas absolutas (todas son `../media/...`, `./assets/...`)
+  • 33 archivos, 3.0 MB total
+  • Compatible con GitHub Pages (sirve desde subpath /sun-runers/)
+- GitHub Pages:
+  • Creado script scripts/deploy-gh-pages.sh
+  • Rama gh-pages huérfana creada con contenido de pages-deploy/public/
+  • Añadido .nojekyll para evitar procesamiento Jekyll
+  • Push exitoso a https://github.com/awa3dstd-create/sun-runers.git (rama gh-pages, SHA fb0017332af3)
+  • Intento de activar Pages via API falló con HTTP 403 ("Resource not accessible by personal access token")
+    - Causa: el PAT fine-grained tiene scope `repo` pero NO `pages:write`
+    - Solución: el usuario debe activar Pages manualmente desde el navegador (1 click)
+  • Script scripts/activar-gh-pages.sh queda para futuros usos si se actualiza el PAT
+- Worker espejo en Cloudflare:
+  • Creado /home/z/my-project/worker-mirror/ con:
+    - wrangler.toml (config assets.directory = ./public)
+    - worker.js (mínimo, solo fallback 404)
+    - public/ (copia de pages-deploy/public/, 33 archivos, 3.0 MB)
+  • Creado script scripts/deploy-worker-mirror.sh
+  • Account ID conocido: 29b40f5c76f58a5e101d22226337cf46
+  • PENDIENTE: token de Cloudflare (el anterior fue revocado por seguridad)
+  • URL esperada: https://sun-runers.workers.dev
+
+Stage Summary:
+- GitHub Pages: rama gh-pages empujada, pendiente activación manual por el usuario
+  → URL final: https://awa3dstd-create.github.io/sun-runers/
+- Worker espejo: TODO listo, solo falta token de Cloudflare para ejecutar deploy
+  → URL esperada: https://sun-runers.workers.dev
+- Próximos pasos requeridos del usuario:
+  1. Activar GitHub Pages en https://github.com/awa3dstd-create/sun-runers/settings/pages
+     (Branch: gh-pages, Path: / (root))
+  2. Crear nuevo API token de Cloudflare con permiso "Edit Cloudflare Workers"
+     en https://dash.cloudflare.com/profile/api-tokens
+     y pasarlo al asistente para ejecutar deploy-worker-mirror.sh
