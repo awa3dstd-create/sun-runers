@@ -67,3 +67,13 @@ server.log
 
 # Keep .env.example tracked, but never the real .env
 !.env.example
+
+# MASTER KIT — contiene credenciales reales, NUNCA commitear
+/download/*MASTER*
+/download/*master*
+/MASTER-KIT*
+/master-kit*
+*MASTER-KIT*
+
+# Carpeta MASTER KIT — contiene credenciales reales, NUNCA commitear
+/download/SUN-RUNERS-MASTER-KIT/
