@@ -1,0 +1,328 @@
+/* ════════════════════════════════════════════════════════════
+   SUN-RUNERS — Mobile Performance Patch CSS
+   Inyectado en el <head> del HTML compilado para arreglar:
+   1. Scroll se sube solo (Lenis + window.scrollTo conflict)
+   2. Animación intro no aparece (hidratación tardía)
+   3. Lentitud móvil (backdrop-filter, magnetic, tilt)
+   4. Mejora touch-action para scroll natural
+   5. Estilos para selector multi-equipo (nueva funcionalidad)
+   ════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────
+   MOBILE-ONLY FIXES (max-width: 1024px)
+   ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  /* Desactivar backdrop-filter (causa lag extremo en móvil) */
+  .glass,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--card, #FFFFFF) !important;
+    background-color: var(--card, #FFFFFF) !important;
+  }
+
+  /* Desactivar efectos magnéticos (causan jank) */
+  .magnetic-btn {
+    will-change: auto !important;
+    transform: none !important;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+  }
+
+  /* Desactivar tilt cards (efecto 3D innecesario en móvil) */
+  .tilt-card {
+    will-change: auto !important;
+    transform: none !important;
+  }
+
+  /* Desactivar spotlight si existe */
+  .spotlight-overlay,
+  .spotlight,
+  [class*="spotlight"] {
+    display: none !important;
+  }
+
+  /* Desactivar aurora-bg (animación pesada) */
+  .aurora-bg {
+    display: none !important;
+  }
+
+  /* Desactivar bg-noise (textura) */
+  .bg-noise {
+    display: none !important;
+  }
+
+  /* Desactivar scroll-progress bar */
+  .scroll-progress {
+    display: none !important;
+  }
+
+  /* Forzar scroll-behavior auto (sin smooth) */
+  html, body {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y !important;
+  }
+
+  /* Eliminar will-change global */
+  * {
+    will-change: auto !important;
+  }
+
+  /* Desactivar animaciones de hover (no existen en touch) */
+  .group:hover,
+  .group\/btn:hover {
+    transform: none !important;
+  }
+
+  /* Asegurar que el header no usa backdrop-filter al hacer scroll */
+  header.bg-background\/80,
+  header[class*="backdrop"] {
+    background: var(--background) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Reduce card padding para más espacio útil */
+  .rounded-2xl.border.border-border.bg-card {
+    padding: 1.25rem !important;
+  }
+
+  /* Mejor touch target en botones */
+  button,
+  a.button,
+  [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Eliminar sombras pesadas */
+  [class*="shadow-[0_0_"],
+  [class*="shadow-2xl"],
+  [class*="shadow-xl"] {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  }
+
+  /* Filtrar blur radial de 80px en trabajos (muy costoso) */
+  [style*="blur(80px)"],
+  [style*="blur(60px)"],
+  [style*="blur(40px)"] {
+    filter: none !important;
+    display: none !important;
+  }
+
+  /* Header más compacto en móvil */
+  header .flex.h-16 {
+    height: 56px !important;
+  }
+
+  /* Hero: reducir min-height para móviles pequeños */
+  section[id="inicio"] {
+    min-height: 100svh !important;
+  }
+
+  /* Asegurar que el body no se traba con overflow */
+  body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: static !important;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   GLOBAL FIXES (todos los dispositivos)
+   ────────────────────────────────────────────── */
+
+/* Eliminar scroll-behavior smooth global (causa problemas con Lenis) */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Asegurar que el body siempre permite scroll vertical */
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Desactivar animaciones pesadas si el usuario prefiere reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Asegurar que intro-overlay no bloquee si hay reduce-motion */
+  .intro-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   INTRO ANIMATION FALLBACK
+   Si por algún motivo la animación no se dispara,
+   el overlay debe desaparecer después de 4s
+   ────────────────────────────────────────────── */
+.intro-overlay {
+  animation:
+    intro-bg-in 0.6s ease-out both,
+    intro-overlay-out 0.6s ease-in 2.4s both,
+    force-hide-after-4s 4s forwards !important;
+}
+
+.intro-logo {
+  animation: intro-logo-out 0.6s ease-in 2.4s both !important;
+}
+
+/* Fallback: si después de 4s el overlay sigue visible, forzar hide */
+@keyframes force-hide-after-4s {
+  0%, 90% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+/* ──────────────────────────────────────────────
+   MULTI-EQUIPO COTIZADOR (Nueva funcionalidad)
+   Selector de equipos con cantidad por categoría
+   ────────────────────────────────────────────── */
+
+.sun-runers-multi-equipos {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px dashed var(--border, #DDD6C5);
+  border-radius: 0.75rem;
+  background: var(--muted, #ECE7DA);
+}
+
+.sun-runers-multi-equipos-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground, #0F100C);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sun-runers-multi-equipos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.sun-runers-equipo-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--card, #FFFFFF);
+  border: 1px solid var(--border, #DDD6C5);
+  border-radius: 0.5rem;
+}
+
+.sun-runers-equipo-row select {
+  padding: 0.5rem;
+  border: 1px solid var(--border, #DDD6C5);
+  border-radius: 0.375rem;
+  background: var(--background, #F7F5EF);
+  color: var(--foreground, #0F100C);
+  font-size: 0.875rem;
+  min-height: 40px;
+}
+
+.sun-runers-equipo-row input[type="number"] {
+  width: 60px;
+  padding: 0.5rem;
+  border: 1px solid var(--border, #DDD6C5);
+  border-radius: 0.375rem;
+  background: var(--background, #F7F5EF);
+  color: var(--foreground, #0F100C);
+  font-size: 0.875rem;
+  text-align: center;
+  min-height: 40px;
+}
+
+.sun-runers-equipo-row button.remove-equipo {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--destructive, #B23A3A);
+  background: transparent;
+  color: var(--destructive, #B23A3A);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.sun-runers-equipo-row button.remove-equipo:hover {
+  background: var(--destructive, #B23A3A);
+  color: white;
+}
+
+.sun-runers-add-equipo-btn {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent, #B8702E);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.sun-runers-add-equipo-btn:hover {
+  opacity: 0.85;
+}
+
+.sun-runers-add-equipo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sun-runers-equipos-summary {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--card, #FFFFFF);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6A655A);
+}
+
+.sun-runers-equipos-summary strong {
+  color: var(--foreground, #0F100C);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .sun-runers-equipo-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .sun-runers-equipo-row input[type="number"] {
+    width: 100%;
+  }
+  .sun-runers-equipo-row button.remove-equipo {
+    justify-self: end;
+  }
+}

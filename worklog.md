@@ -1029,3 +1029,57 @@ IMPORTANTE PARA RECUPERACIÓN FUTURA:
 - Worker `sr` fue eliminado
 - Brevo email real: sunrunerscuba@gmail.com
 - Schema /api/contact requiere campo `address` (no province/municipality)
+
+---
+Task ID: 31
+Agent: main (Super Z)
+Task: Resolver problemas móviles + Implementar selector multi-equipo en cotizador + Deploy a Pages
+
+Work Log:
+- Análisis profundo del HTML/CSS/JS del deployment funcional 273b6a42
+- Detectados problemas:
+  * backdrop-filter: blur(20px) saturate(180%) en .glass — causa lag extremo en móvil
+  * touch-action: none en .touch-none — bloquea scroll natural
+  * scroll-behavior: smooth + scrollIntoView conflictúa en móvil
+  * 10 elementos .magnetic-btn + will-change: transform causan jank
+  * 21 elementos .tilt-card innecesarios en móvil
+  * Lenis (smooth scroll) interfiere con scroll nativo móvil
+  * window.scrollTo espurios al top en botón "Arriba"
+  * Intro animation depende de useEffect que no se ejecuta si hidratación tarda
+- Creado /home/z/my-project/scripts/mobile-patch.css (8.2 KB) con:
+  * Media query mobile-only que desactiva backdrop-filter, magnetic, tilt, aurora, will-change
+  * Fija scroll-behavior: auto, touch-action: pan-y, overscroll-behavior: contain
+  * Estilos para nuevo widget multi-equipo
+- Creado /home/z/my-project/scripts/mobile-patch.js (14.7 KB) con:
+  * Interceptor de window.scrollTo (solo permite si click en botón "Arriba")
+  * Force hide de intro-overlay a los 4s + al primer interaction
+  * Observer de overflow del body
+  * scrollIntoView override para usar auto en móvil
+  * Widget multi-equipo inyectado en form de contacto
+- Widget multi-equipo (4 categorías):
+  * Inversores (9 opciones)
+  * Baterías LiFePO4 (8 opciones)
+  * Paneles solares (10 opciones)
+  * Controladores MPPT (6 opciones)
+- Inyección de patches en HTML compilado (215,569 bytes total)
+- Deploy a Cloudflare Worker mirror (sun-runers.dashiellyeneri.workers.dev) con wrangler
+- Deploy a Cloudflare Pages (sun-runers.pages.dev) con wrangler pages deploy:
+  * Deployment ID: 465b1c0f
+  * HTTP 200 con 215,569 bytes
+  * Patches mobile verificados presentes en HTML servido
+  * API Pages Functions intacta (Brevo + Telegram + CallMeBot)
+- Test visual con agent-browser en modo iPhone 14:
+  * Intro overlay aparece y se oculta correctamente
+  * Scroll Y=800 después de scroll (no se sube solo)
+  * Sin errores de consola
+  * Widget multi-equipo visible cuando servicio es fotovoltaico
+  * Test end-to-end: 4 equipos agregados se integraron automáticamente al campo message
+
+Stage Summary:
+- ✅ Cloudflare Pages principal actualizado: https://sun-runers.pages.dev (HTTP 200, 215 KB)
+- ✅ Cloudflare Worker mirror actualizado: https://sun-runers.dashiellyeneri.workers.dev
+- ✅ 3 problemas móviles resueltos: scroll, intro animation, lentitud
+- ✅ Widget multi-equipo funcional (4 categorías, N equipos)
+- ✅ API Pages Functions intacta
+- ✅ GitHub sincronizado con scripts y HTML parcheado
+- ⚠️ Parches aplicados al HTML compilado, NO al código fuente Next.js original
