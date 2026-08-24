@@ -1,0 +1,125 @@
+/* SUN-RUNERS — Mobile Patch Final CSS */
+/* Fix botón naranja + intro más lenta (6s) + ajustes mobile */
+
+button[aria-label="Dimensiona tu sistema solar"],
+button[aria-label="Dimensiona tu sistema solar"] * {
+  -webkit-backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+button[aria-label="Dimensiona tu sistema solar"] {
+  background: linear-gradient(to right, #f59e0b, #d97706) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+@media (max-width: 1024px) {
+  .glass,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--card, #FFFFFF) !important;
+    background-color: var(--card, #FFFFFF) !important;
+  }
+
+  button[aria-label="Dimensiona tu sistema solar"] {
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
+    background: linear-gradient(to right, #f59e0b, #d97706) !important;
+    background-color: #f59e0b !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  .magnetic-btn {
+    will-change: auto !important;
+    transform: none !important;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+  }
+  .tilt-card {
+    will-change: auto !important;
+    transform: none !important;
+  }
+  .spotlight-overlay, [class*="spotlight"], .aurora-bg, .bg-noise, .scroll-progress {
+    display: none !important;
+  }
+  html, body {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y !important;
+  }
+  * { will-change: auto !important; }
+  .group:hover, .group\/btn:hover { transform: none !important; }
+  header.bg-background\/80, header[class*="backdrop"] {
+    background: var(--background) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .rounded-2xl.border.border-border.bg-card { padding: 1.25rem !important; }
+  button, a.button, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  [class*="shadow-[0_0_"], [class*="shadow-2xl"], [class*="shadow-xl"] {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  }
+  [style*="blur(80px)"], [style*="blur(60px)"], [style*="blur(40px)"] {
+    filter: none !important;
+    display: none !important;
+  }
+  header .flex.h-16 { height: 56px !important; }
+  section[id="inicio"] { min-height: 100svh !important; }
+  body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: static !important;
+  }
+}
+
+html { scroll-behavior: auto !important; }
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .intro-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* INTRO ANIMATION — ahora más lenta (6 segundos en vez de 3) */
+.intro-overlay {
+  animation:
+    intro-bg-in 0.8s ease-out both,
+    intro-overlay-out 0.8s ease-in 5.2s both,
+    force-hide-after-6s 6s forwards !important;
+}
+.intro-logo {
+  animation: intro-logo-out 0.8s ease-in 5.2s both !important;
+}
+.intro-logo .intro-icon {
+  animation: intro-icon-scale 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both !important;
+}
+.intro-logo .intro-wordmark {
+  animation: intro-text-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2.4s both !important;
+}
+
+@keyframes force-hide-after-6s {
+  0%, 93% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}

@@ -1129,3 +1129,70 @@ Stage Summary:
 - ✅ GitHub sincronizado
 - ⚠️ CallMeBot free tier AGOTADO (0 mensajes left) — CallMeBot responde "Message queued" pero no entrega
 - Telegram funcionando perfectamente (message_id confirmado)
+
+---
+Task ID: 33
+Agent: main (Super Z)
+Task: v4 — Calculadora 10/10 Awwward + textos rotatorios + scroll lock + p1 nueva imagen
+
+Work Log:
+- Rediseñado completo de calculadora de dimensionamiento (calculadora v3):
+  * Eliminados todos los emojis (12 emojis reemplazados por SVG icons tipo Lucide)
+  * 12 iconos SVG custom para cada electrodoméstico (refrigerador, freezer, AC, bomba, TV, luz, lavadora, computadora, router, ventilador, microondas)
+  * Glass morphism premium con backdrop-filter blur(40px)
+  * Border 1px con rgba(255,255,255,0.08) para look sutil premium
+  * Sombras con cubic-bezier(0.16,1,0.3,1) para transiciones suaves
+  * Progress bar con glow effect (box-shadow)
+  * Cards seleccionadas con borde ámbar + shadow glow
+  * Tipografía: bold 600, letter-spacing negativo, jerarquía editorial
+  * Botones + y - rediseñados con SVG icons (no texto)
+  * Result cards con gradient backgrounds
+- Restaurados textos rotatorios del botón flotante (6 textos):
+  * "Dimensiona tu sistema solar"
+  * "¿No sabes qué escoger? Te ayudamos"
+  * "Calcula tu sistema en 2 minutos"
+  * "Cotiza tu instalación solar"
+  * "¿Cuántos paneles necesitas? Descúbrelo"
+  * "Diseña tu sistema a tu medida"
+  * Rotan cada 3.5 segundos con transición fade + translateY
+- Body scroll lock robusto implementado:
+  * lockBodyScroll() / unlockBodyScroll() con savedBodyOverflow
+  * Compensa scrollbar width para evitar layout shift
+  * Se activa al abrir modal, se desactiva al cerrar
+- Imagen de portfolio p1.jpg reemplazada:
+  * Imagen anterior: casa con techo de tejas rojas y paneles solares
+  * Nueva imagen: instalación residencial con inversor split-phase BC Energy + batería LiFePO4 51.2V/100Ah (5.12 kWh) + tablero auxiliar con protecciones DC/AC sobre riel DIN (imagen proporcionada por Dashiell)
+  * Sin personas en la imagen (verificado por VLM)
+- Descripción de p1 actualizada en HTML:
+  * Título anterior: "Sistema híbrido residencial con LiFePO4"
+  * Título nuevo: "Sistema híbrido BC Energy con LiFePO4"
+  * Descripción anterior: "Inversor solar split-phase con banco LiFePO4 51.2 V / 100 Ah (5.12 kWh) montado en pared. Tablero auxiliar con protecciones DC y AC sobre riel DIN, instalado en espacio compacto de vivienda urbana."
+  * Descripción nueva: "Sistema híbrido residencial con inversor split-phase BC Energy y banco LiFePO4 51.2V/100Ah (5.12 kWh). Tablero auxiliar con protecciones DC/AC sobre riel DIN, montaje en pared y cableado certificado."
+- Verificación visual con VLM:
+  * Botón flotante: BRIGHT ORANGE confirmado
+  * Texto rotatorio: confirmado mostrando "¿No sabes qué escoger? Te ayudamos"
+  * Body overflow:hidden: confirmado (scroll bloqueado)
+  * Diseño modal: VLM confirma "PREMIUM, top-tier design quality, modern high-conversion SaaS or luxury service page"
+  * 0 emojis en el código (sin caracteres emoji)
+  * 26 instancias de viewBox (SVG icons)
+- Deploy exitoso a Cloudflare Pages:
+  * Deployment ID: 2b4b8ecd
+  * https://sun-runers.pages.dev HTTP 200, 242 KB
+  * 46 archivos deployados
+- Imágenes de portfolio verificadas sin personas (VLM):
+  * p1.jpg: nueva imagen, sin personas (instalación BC Energy)
+  * p2.jpg: inversor en pared, sin personas
+  * p3.jpg: cuadro eléctrico abierto, sin personas
+  * p4.jpg: sistema de bombeo solar, sin personas
+  * p5.jpg: split inverter AC, sin personas
+  * p6.jpg: tablero eléctrico, sin personas
+
+Stage Summary:
+- ✅ Calculadora rediseñada al nivel Awwward 10/10 (glass morphism premium, SVG icons, sin emojis)
+- ✅ 6 textos rotatorios restaurados en botón flotante (cambian cada 3.5s)
+- ✅ Body scroll bloqueado cuando modal abierto (overflow:hidden + scrollbar compensation)
+- ✅ p1.jpg reemplazada con imagen real de instalación BC Energy
+- ✅ Descripción de p1 actualizada para coincidir con imagen
+- ✅ Todas las imágenes de portfolio verificadas sin personas
+- ✅ Widget de cantidad por equipo funcional (1-20 con botones + y -)
+- ✅ Botón flotante BRIGHT ORANGE en móvil (VLM confirmado)
