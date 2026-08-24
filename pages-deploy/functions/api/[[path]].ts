@@ -20,6 +20,10 @@ interface Env {
   BREVO_FROM_NAME: string;
   BREVO_NOTIFY_EMAIL: string;
   WHATSAPP_PUBLIC_NUMBER: string;
+  TELEGRAM_BOT_TOKEN: string;
+  TELEGRAM_CHAT_ID: string;
+  WHATSAPP_CALLMEBOT_PHONE: string;
+  WHATSAPP_CALLMEBOT_APIKEY: string;
   CORS_ORIGIN: string;
   ENVIRONMENT: string;
 }
@@ -67,6 +71,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
         fromName: env.BREVO_FROM_NAME ?? "SUN-RUNERS",
         notifyEmail: env.BREVO_NOTIFY_EMAIL ?? "",
         whatsappPublic: env.WHATSAPP_PUBLIC_NUMBER ?? "",
+        hasTelegram: Boolean(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID),
+        hasCallmebot: Boolean(env.WHATSAPP_CALLMEBOT_PHONE && env.WHATSAPP_CALLMEBOT_APIKEY),
         allConfigured:
           Boolean(env.BREVO_API_KEY) &&
           Boolean(env.BREVO_FROM_EMAIL) &&
@@ -142,10 +148,11 @@ async function handleContact(req: Request, env: Env): Promise<Response> {
     assignment.distanceKm ? `, ${assignment.distanceKm}km` : ""
   })`, true);
 
-  const emailSummary = {
+  const summary = {
     clientEmailSent: false,
-    engineerEmailSent: false,
-    centralEmailSent: false,
+    companyEmailSent: false,
+    callmebotSent: false,
+    telegramSent: false,
     brevoConfigured: Boolean(env.BREVO_API_KEY),
   };
 
@@ -169,7 +176,7 @@ async function handleContact(req: Request, env: Env): Promise<Response> {
       text: clientEmail.text,
       tags: ["contacto-cliente", payload.service],
     });
-    emailSummary.clientEmailSent = clientResult.success;
+    summary.clientEmailSent = clientResult.success;
 
     await logAction(env, id, "email_sent",
       `Email de confirmación al cliente (${payload.email})`, clientResult.success);
@@ -191,7 +198,7 @@ async function handleContact(req: Request, env: Env): Promise<Response> {
         text: engEmail.text,
         tags: ["notificacion-interna", `ing-${engineer.id}`],
       });
-      emailSummary.engineerEmailSent = engResult.success;
+      summary.companyEmailSent = engResult.success;
 
       await logAction(env, id, "email_sent",
         `Notificación interna al ingeniero (${engineer.email})`, engResult.success);
@@ -204,14 +211,14 @@ async function handleContact(req: Request, env: Env): Promise<Response> {
           text: engEmail.text,
           tags: ["copia-central", `ing-${engineer.id}`],
         });
-        emailSummary.centralEmailSent = centralResult.success;
+        summary.companyEmailSent = centralResult.success;
 
         await logAction(env, id, "email_sent",
           `Copia al email central (${env.BREVO_NOTIFY_EMAIL})`, centralResult.success);
       }
     }
 
-    const allSent = emailSummary.clientEmailSent && emailSummary.engineerEmailSent;
+    const allSent = summary.clientEmailSent && summary.companyEmailSent;
     await env.DB.prepare(
       `UPDATE contact_request SET status = ?, email_sent = ?, updated_at = datetime('now') WHERE id = ?`
     ).bind(allSent ? "notificado" : "nuevo", allSent ? 1 : 0, id).run();
@@ -220,12 +227,80 @@ async function handleContact(req: Request, env: Env): Promise<Response> {
       "BREVO_API_KEY no configurada. Solicitud persistida pero sin envío de email.", false);
   }
 
+  // ─── TELEGRAM notification ───
+  if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+    try {
+      const serviceLabel2 = SERVICES.find((s) => s.id === payload.service)?.title ?? payload.service;
+      const tgText = [
+        "🔔 Nueva solicitud SUN-RUNERS",
+        "",
+        "Nombre: " + payload.name,
+        "Telefono: " + payload.phone,
+        "Email: " + payload.email,
+        "Direccion: " + payload.address,
+        "Servicio: " + serviceLabel2,
+        "Canal preferido: " + payload.preferredChannel,
+        "Zona asignada: " + assignment.zone,
+        "",
+        "Mensaje:",
+        payload.message,
+      ].join("\n");
+
+      const tgResponse = await fetch(
+        "https://api.telegram.org/bot" + env.TELEGRAM_BOT_TOKEN + "/sendMessage",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: env.TELEGRAM_CHAT_ID,
+            text: tgText,
+          }),
+        }
+      );
+      summary.telegramSent = tgResponse.ok;
+      await logAction(env, id, "telegram_sent",
+        "Notificacion Telegram a chat " + env.TELEGRAM_CHAT_ID, tgResponse.ok);
+    } catch (err) {
+      console.error("[telegram] error:", err);
+    }
+  }
+
+  // ─── WHATSAPP via CallMeBot ───
+  if (env.WHATSAPP_CALLMEBOT_PHONE && env.WHATSAPP_CALLMEBOT_APIKEY) {
+    try {
+      const serviceLabel3 = SERVICES.find((s) => s.id === payload.service)?.title ?? payload.service;
+      const waText = [
+        "Nueva solicitud SUN-RUNERS",
+        "",
+        "Nombre: " + payload.name,
+        "Telefono: " + payload.phone,
+        "Email: " + payload.email,
+        "Direccion: " + payload.address,
+        "Servicio: " + serviceLabel3,
+        "Mensaje: " + payload.message.substring(0, 200),
+      ].join("\n");
+
+      const waResponse = await fetch(
+        "https://api.callmebot.com/whatsapp.php?phone=" + encodeURIComponent(env.WHATSAPP_CALLMEBOT_PHONE) + "&apikey=" + encodeURIComponent(env.WHATSAPP_CALLMEBOT_APIKEY) + "&text=" + encodeURIComponent(waText)
+      );
+      summary.callmebotSent = waResponse.ok;
+      await logAction(env, id, "callmebot_sent",
+        "WhatsApp enviado a " + env.WHATSAPP_CALLMEBOT_PHONE, waResponse.ok);
+    } catch (err) {
+      console.error("[callmebot] error:", err);
+    }
+  }
+
+  const allSent = summary.clientEmailSent && summary.companyEmailSent;
+  await env.DB.prepare(
+    "UPDATE contact_request SET status = ?, email_sent = ?, updated_at = datetime('now') WHERE id = ?"
+  ).bind(allSent ? "notificado" : "nuevo", allSent ? 1 : 0, id).run();
+
   return json({
     ok: true,
     requestId: id,
-    assignedZone: assignment.zone,
-    emailsSent: emailSummary,
-    message: "Solicitud recibida. Te contactaremos en menos de 24 horas hábiles por el canal indicado.",
+    emailsSent: summary,
+    message: "Solicitud recibida. Te contactaremos por WhatsApp en menos de 24 horas.",
   });
 }
 

@@ -1,0 +1,281 @@
+/* ════════════════════════════════════════════════════════════
+   SUN-RUNERS — Mobile Patch v2 CSS (corregido)
+   1. Fix botón "Dimensiona tu sistema solar" opaco en móvil
+   2. Estilos para inputs de cantidad en wizard step 4
+   3. Mantiene las optimizaciones de rendimiento mobile del v1
+   ════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────
+   FIX BOTÓN "Dimensiona tu sistema solar"
+   ────────────────────────────────────────────── */
+button[aria-label="Dimensiona tu sistema solar"],
+button[aria-label="Dimensiona tu sistema solar"] * {
+  -webkit-backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+button[aria-label="Dimensiona tu sistema solar"] {
+  background: linear-gradient(to right, #f59e0b, #d97706) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* ──────────────────────────────────────────────
+   MOBILE-ONLY OPTIMIZATIONS
+   ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .glass,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--card, #FFFFFF) !important;
+    background-color: var(--card, #FFFFFF) !important;
+  }
+
+  /* EXCEPCIÓN: botón "Dimensiona tu sistema solar" mantiene su efecto */
+  button[aria-label="Dimensiona tu sistema solar"],
+  button[aria-label="Dimensiona tu sistema solar"] * {
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  .magnetic-btn {
+    will-change: auto !important;
+    transform: none !important;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+  }
+
+  .tilt-card {
+    will-change: auto !important;
+    transform: none !important;
+  }
+
+  .spotlight-overlay,
+  [class*="spotlight"],
+  .aurora-bg,
+  .bg-noise,
+  .scroll-progress {
+    display: none !important;
+  }
+
+  html, body {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y !important;
+  }
+
+  * {
+    will-change: auto !important;
+  }
+
+  .group:hover,
+  .group\/btn:hover {
+    transform: none !important;
+  }
+
+  header.bg-background\/80,
+  header[class*="backdrop"] {
+    background: var(--background) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .rounded-2xl.border.border-border.bg-card {
+    padding: 1.25rem !important;
+  }
+
+  button,
+  a.button,
+  [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  [class*="shadow-[0_0_"],
+  [class*="shadow-2xl"],
+  [class*="shadow-xl"] {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  }
+
+  [style*="blur(80px)"],
+  [style*="blur(60px)"],
+  [style*="blur(40px)"] {
+    filter: none !important;
+    display: none !important;
+  }
+
+  header .flex.h-16 {
+    height: 56px !important;
+  }
+
+  section[id="inicio"] {
+    min-height: 100svh !important;
+  }
+
+  body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: static !important;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   GLOBAL FIXES
+   ────────────────────────────────────────────── */
+html {
+  scroll-behavior: auto !important;
+}
+
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .intro-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   INTRO ANIMATION FALLBACK
+   ────────────────────────────────────────────── */
+.intro-overlay {
+  animation:
+    intro-bg-in 0.6s ease-out both,
+    intro-overlay-out 0.6s ease-in 2.4s both,
+    force-hide-after-4s 4s forwards !important;
+}
+
+.intro-logo {
+  animation: intro-logo-out 0.6s ease-in 2.4s both !important;
+}
+
+@keyframes force-hide-after-4s {
+  0%, 90% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+/* ──────────────────────────────────────────────
+   WIZARD: INPUT DE CANTIDAD POR EQUIPO
+   ────────────────────────────────────────────── */
+.sr-qty-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 8px;
+  animation: sr-qty-fade-in 0.2s ease-out;
+}
+
+@keyframes sr-qty-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sr-qty-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #fbbf24;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.sr-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sr-qty-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f59e0b;
+  color: #000;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.sr-qty-btn:active {
+  transform: scale(0.92);
+  background: #d97706;
+}
+
+.sr-qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sr-qty-input {
+  width: 36px;
+  height: 28px;
+  text-align: center;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fbbf24;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: ui-monospace, monospace;
+  -moz-appearance: textfield;
+}
+
+.sr-qty-input::-webkit-outer-spin-button,
+.sr-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sr-qty-input:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+@media (max-width: 640px) {
+  .sr-qty-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .sr-qty-input {
+    width: 40px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .sr-qty-label {
+    font-size: 10px;
+  }
+}
