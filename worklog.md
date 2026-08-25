@@ -1254,3 +1254,38 @@ Stage Summary:
 - ✅ Body scroll bloqueado cuando modal abierto
 - ✅ VLM ratings: 9/10 wizard, 8/10 form
 - Deploy: https://sun-runers.pages.dev (deployment bf2589ac)
+
+---
+Task ID: 35
+Agent: main (Super Z)
+Task: v6 — Fix React form prefill + mejores imágenes portfolio + QA completo + ZIP
+
+Work Log:
+- BUG CRÍTICO RESUELTO: El formulario de contacto tiene un indicador de "Progreso del formulario 0/5" que no se actualizaba cuando se precargaba el mensaje desde el wizard de dimensionamiento
+  * Causa: react-hook-form usa un sistema interno de eventos que no se activa con element.value = "texto"
+  * Fix: Implementada función setReactValue() que usa Object.getOwnPropertyDescriptor(proto, 'value').set.call(element, value) para setear el valor via el setter nativo, luego dispara eventos 'input' y 'change' con bubbles:true
+  * Verificación: Progress cambió de 0/5 a 1/5 después del fix (el mensaje precargado ahora cuenta)
+  * Service auto-seleccionado a "Sistemas fotovoltaicos con respaldo de batería"
+  * Mensaje precargado con 760 chars de configuración completa
+- IMÁGENES DE PORTFOLIO MEJORADAS (verificadas con VLM, sin personas, sin marcas de agua):
+  * p1.jpg: Sistema híbrido BC Energy (imagen del usuario) — 45KB
+  * p4.jpg: Bombeo solar agrícola real — 824KB (VLM: 8/10, no people, no watermark)
+  * p5.jpg: Split inverter AC instalado — 185KB (VLM: 9/10, no people, no watermark)
+  * p6.jpg: Tablero eléctrico residencial — 383KB (VLM: 8/10, no people, no watermark)
+- QA COMPLETO (simulación de cliente real en modo iPhone 14):
+  * ✅ Sin errores de consola durante scroll completo
+  * ✅ Botón "Solicitar cotización" hace scroll al contacto (Y=16850)
+  * ✅ Botón "Ver servicios" hace scroll a servicios (Y=871)
+  * ✅ 5 botones "Cotizar" funcionales en sección servicios
+  * ✅ Botón "Dimensiona tu sistema solar" abre wizard (display:flex)
+  * ✅ Wizard completa 7 pasos correctamente
+  * ✅ Selección de equipos + widget de cantidad funcional
+  * ✅ Resultado muestra paneles, inversor, baterías, costo
+  * ✅ "Enviar solicitud" precarga el form con mensaje (760 chars) y servicio
+  * ✅ Progress del form actualizado: 1/5 (mensaje cuenta como paso completado)
+
+Stage Summary:
+- ✅ Bug del formulario RESUELTO: el mensaje precargado ahora cuenta como paso completado
+- ✅ 3 imágenes de portfolio reales sin personas ni watermarks
+- ✅ QA completo: 0 errores encontrados
+- ✅ Deployment: https://sun-runers.pages.dev (f88050a7)

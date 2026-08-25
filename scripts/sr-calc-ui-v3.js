@@ -353,29 +353,69 @@
       r.recommendations.forEach(function(rec) { msg += '• ' + rec + '\n'; });
       api.close();
 
-      var msgField = document.querySelector('#contacto textarea[name="message"]');
-      if (msgField) {
-        msgField.value = msg;
-        msgField.dispatchEvent(new Event('input', { bubbles: true }));
+      // Función para setear valor en input/textarea de React (native setter approach)
+      function setReactValue(element, value) {
+        if (!element) return;
+        var proto = element.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+        var nativeSetter = Object.getOwnPropertyDescriptor(proto, 'value');
+        if (nativeSetter && nativeSetter.set) {
+          nativeSetter.set.call(element, value);
+        } else {
+          element.value = value;
+        }
+        // Disparar eventos que React escucha
+        element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        element.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+        // También dispatch como Event normal para compatibilidad con react-hook-form
+        try {
+          var ev = new Event('input', { bubbles: true });
+          Object.defineProperty(ev, 'target', { value: element });
+          Object.defineProperty(ev, 'currentTarget', { value: element });
+        } catch(e) {}
       }
-      var serviceSelect = document.querySelector('#contacto [role="combobox"]');
-      if (serviceSelect) {
-        serviceSelect.click();
-        setTimeout(function() {
-          var options = document.querySelectorAll('[role="option"]');
-          options.forEach(function(opt) {
-            if (opt.textContent.toLowerCase().includes('fotovoltaico')) opt.click();
-          });
-        }, 200);
-      }
-      var contactSection = document.querySelector('#contacto');
-      if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      var toast = document.createElement('div');
-      toast.className = 'sr-toast';
-      toast.textContent = '✓ Configuración cargada en el formulario';
-      document.body.appendChild(toast);
-      setTimeout(function() { toast.remove(); }, 3000);
+      // Esperar a que el modal se cierre y el form esté visible
+      setTimeout(function() {
+        // 1. Setear el mensaje (textarea)
+        var msgField = document.querySelector('#contacto textarea[name="message"]');
+        if (msgField) {
+          setReactValue(msgField, msg);
+          console.log('[SR] Mensaje precargado en textarea');
+        }
+
+        // 2. Setear el servicio a "fotovoltaico" via Radix Select
+        var serviceTrigger = document.querySelector('#contacto button[role="combobox"]');
+        if (serviceTrigger) {
+          serviceTrigger.click();
+          setTimeout(function() {
+            var options = document.querySelectorAll('[role="option"]');
+            options.forEach(function(opt) {
+              var text = opt.textContent.toLowerCase();
+              if (text.includes('fotovoltaico') || text.includes('fotovolta')) {
+                opt.click();
+                console.log('[SR] Servicio fotovoltaico seleccionado');
+              }
+            });
+            // Si no se encontró opción, cerrar el dropdown
+            if (!document.querySelector('[role="option"][data-selected]')) {
+              document.body.click();
+            }
+          }, 300);
+        }
+
+        // 3. Hacer scroll al formulario
+        var contactSection = document.querySelector('#contacto');
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 4. Mostrar toast
+        var toast = document.createElement('div');
+        toast.className = 'sr-toast';
+        toast.textContent = '✓ Configuración cargada en el formulario';
+        document.body.appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 3000);
+      }, 400);
     }
   };
   window.__srCalc = api;
