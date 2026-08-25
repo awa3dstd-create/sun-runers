@@ -1196,3 +1196,61 @@ Stage Summary:
 - ✅ Todas las imágenes de portfolio verificadas sin personas
 - ✅ Widget de cantidad por equipo funcional (1-20 con botones + y -)
 - ✅ Botón flotante BRIGHT ORANGE en móvil (VLM confirmado)
+
+---
+Task ID: 34
+Agent: main (Super Z)
+Task: v5 — FIX CRÍTICO botón no responde + 3 imágenes portfolio reales + modal garantizado
+
+Work Log:
+- DIAGNÓSTICO CRÍTICO: El botón "Dimensiona tu sistema solar" NO abría el modal porque:
+  1. La función init() creaba el modal solo si no existía, PERO nunca se llamaba ensureModalExists() antes de render()
+  2. El approach de reemplazar (clonar) el botón rompía el fiber de React/framer-motion
+  3. En móvil real, el touch event no se convertía en click correctamente
+- FIX IMPLEMENTADO:
+  1. Creada función ensureModalExists() que SIEMPRE verifica y crea el modal si no existe
+  2. api.open() ahora llama ensureModalExists() ANTES de render()
+  3. Eliminado el clone del botón (rompía framer-motion)
+  4. Implementado EVENT DELEGATION en capture phase:
+     - click listener en document con capture:true
+     - pointerdown listener en document con capture:true
+     - touchstart listener en document con capture:true, passive:false
+  5. Usado target.closest('button[aria-label="Dimensiona tu sistema solar"]') para detectar clicks en cualquier parte del botón
+  6. Llamado e.preventDefault() + e.stopPropagation() + e.stopImmediatePropagation() para bloquear handlers originales
+- VERIFICACIÓN: 
+  * Botón existe y está visible: true
+  * Modal existe antes del click: false → después del click: true
+  * Modal display: 'flex' (visible)
+  * Modal tiene contenido: true (innerHTML.length > 100)
+  * Body overflow: 'hidden' (scroll bloqueado)
+  * VLM confirma: "YES. There is a modal/wizard open titled 'Dimensiona tu sistema solar' (Step 1 of 7 — Location), featuring a premium dark-themed design with orange accents, rounded corners, and a semi-transparent background overlay."
+- IMÁGENES DE PORTFOLIO REALES (sin personas, verificadas con VLM):
+  * p1.jpg: 45697 bytes — Sistema híbrido BC Energy (inversor + batería LiFePO4 51.2V/100Ah + cuadro DIN) — imagen del usuario
+  * p4.jpg: 185319 bytes — Bombeo solar para finca agrícola (paneles en campo verde + bomba + cielo azul) — VLM: "NO people"
+  * p5.jpg: 241976 bytes — Clima inverter 36000 BTU (split system completo con condensador + unidad interior) — VLM: "NO people"
+  * p6.jpg: 304749 bytes — Tablero principal residencial (panel eléctrico abierto con breakers y cables) — VLM: "NO people"
+- TEST END-TO-END COMPLETO:
+  1. Botón abre wizard ✅
+  2. Avance de 7 pasos funcional ✅
+  3. Selección de equipos en step 4 ✅
+  4. Widget de cantidad + funciona ✅
+  5. Cálculo del resultado correcto: 5 paneles, 3kW inversor, 2 baterías, $2,850 ✅
+  6. Click en "Enviar solicitud" cierra modal ✅
+  7. Form de contacto recibe scrollIntoView ✅
+  8. Campo message precargado con configuración completa ✅
+  9. Toast de confirmación visible ✅
+  10. Verificación JS: hasContent=true, hasConfig=true, preview muestra "SOLICITUD DE COTIZACIÓN — Sistema fotovoltaico\n\nCONFIGURACIÓN DIMENSIONADA:\n• 5 paneles solares (550W c/u) — 2.8 kW total\n• Inversor 3 kW (sistema 48V)..."
+- VLM RATING DEL WIZARD: 9/10 ("modern and professional, polished feel, dark mode aesthetic looks modern")
+- VLM RATING DEL FORM: 8/10 ("modern, clean, professional, high-converting B2B design")
+
+Stage Summary:
+- ✅ BUG CRÍTICO RESUELTO: botón "Dimensiona tu sistema solar" ahora abre el wizard en móvil
+- ✅ Modal garantizado: ensureModalExists() se llama antes de render()
+- ✅ Event delegation robusta: click + pointerdown + touchstart en capture phase
+- ✅ 3 imágenes de portfolio reales (p4, p5, p6) sin personas, verificadas con VLM
+- ✅ p1.jpg con imagen BC Energy real del usuario
+- ✅ Wizard completo funcional: 7 pasos + cálculo + envío al form
+- ✅ Form de contacto se precarga con configuración dimensionada
+- ✅ Body scroll bloqueado cuando modal abierto
+- ✅ VLM ratings: 9/10 wizard, 8/10 form
+- Deploy: https://sun-runers.pages.dev (deployment bf2589ac)

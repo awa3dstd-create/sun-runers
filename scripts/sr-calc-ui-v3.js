@@ -300,6 +300,7 @@
   var api = {
     open: function() {
       state.open = true; state.step = 0; state.result = null; state.appliances = {};
+      ensureModalExists();
       lockBodyScroll();
       render();
     },
@@ -378,6 +379,17 @@
     }
   };
   window.__srCalc = api;
+
+  /* === Crear modal garantizado (siempre que se llame) === */
+  function ensureModalExists() {
+    if (!document.getElementById('sr-calc-modal')) {
+      var modal = document.createElement('div');
+      modal.id = 'sr-calc-modal';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) api.close(); });
+    }
+    return document.getElementById('sr-calc-modal');
+  }
 
   /* === Inicialización === */
   function init() {
@@ -494,14 +506,53 @@
       e.preventDefault(); e.stopPropagation(); api.open();
     }, true);
 
-    // Reemplazar handler del botón flotante
+    // Event delegation robusto: interceptar TODOS los clicks en el botón flotante
+    // sin necesidad de reemplazar el nodo (que rompe React/framer-motion)
+    function isFloatingButton(target) {
+      if (!target || !target.closest) return false;
+      var btn = target.closest('button[aria-label="Dimensiona tu sistema solar"]');
+      return !!btn;
+    }
+
+    // Capturar click en capture phase (antes de que framer-motion lo procese)
+    document.addEventListener('click', function(e) {
+      if (isFloatingButton(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        api.open();
+        return false;
+      }
+    }, true);
+
+    // También capturar pointerdown para prevenir animaciones de framer-motion
+    document.addEventListener('pointerdown', function(e) {
+      if (isFloatingButton(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    // Y touchstart para móvil
+    document.addEventListener('touchstart', function(e) {
+      if (isFloatingButton(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+        api.open();
+      }
+    }, { capture: true, passive: false });
+
+    // Reemplazar handler del botón flotante (fallback si event delegation no alcanza)
     function replaceFloatingButton() {
       var btn = document.querySelector('button[aria-label="Dimensiona tu sistema solar"]');
       if (btn && !btn.dataset.srCalcReplaced) {
         btn.dataset.srCalcReplaced = '1';
-        var clone = btn.cloneNode(true);
-        btn.parentNode.replaceChild(clone, btn);
-        clone.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); api.open(); });
+        // NO clonar el botón (rompe framer-motion). Solo añadir click listener adicional.
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          api.open();
+        }, { capture: true });
       }
     }
     var btnObserver = new MutationObserver(function() { replaceFloatingButton(); });
