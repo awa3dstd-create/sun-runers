@@ -8,6 +8,7 @@
 
 
 
+
 <style id="sun-runers-mobile-patch-final">/* SUN-RUNERS — Mobile Patch Final CSS */
 /* Fix botón naranja + intro más lenta (6s) + ajustes mobile */
 
@@ -153,7 +154,8 @@ body {
 
 
 
-<script id="sun-runers-calc-v9-final">/* ════════════════════════════════════════════════════════════
+
+<script id="sun-runers-calc-v10-final">/* ════════════════════════════════════════════════════════════
    SUN-RUNERS — Calculadora v3 (Awwward-quality)
    - Sin emojis, con SVG icons tipo Lucide
    - Glass morphism premium
@@ -447,9 +449,7 @@ body {
     document.body.style.right = '';
     document.body.style.width = '';
     document.body.style.paddingRight = savedBodyPaddingRight || '';
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
+    if (scrollY) { window.scrollTo(0, parseInt(scrollY || '0') * -1); }
   }
 
   /* === Render del modal === */
@@ -970,18 +970,10 @@ body {
     // Iniciar texto rotatorio
     setTimeout(startRotatingText, 1500);
 
-    document.addEventListener('wheel', function(e) {
-      if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); }
-    }, { passive: false });
-    document.addEventListener('touchmove', function(e) {
-      if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); }
-    }, { passive: false });
-    document.addEventListener('keydown', function(e) {
-      if (state.open && [32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) !== -1) {
-        if (!e.target.closest('#sr-calc-modal')) { e.preventDefault(); }
-      }
-    });
-    console.log('[SR v3] Calculadora lista con scroll lock mejorado');
+    document.addEventListener('wheel', function(e) { if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); } }, { passive: false });
+    document.addEventListener('touchmove', function(e) { if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); } }, { passive: false });
+    document.addEventListener('keydown', function(e) { if (state.open && [32,33,34,35,36,37,38,39,40].indexOf(e.keyCode) !== -1) { if (!e.target.closest('#sr-calc-modal')) { e.preventDefault(); } } });
+    console.log('[SR v3] Calculadora lista con scroll lock');
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
