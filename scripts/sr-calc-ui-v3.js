@@ -449,7 +449,8 @@
 .sr-modal-close:hover{background:rgba(255,255,255,0.1);color:#fff;}
 .sr-modal-progress{height:2px;background:rgba(255,255,255,0.05);overflow:hidden;}
 .sr-modal-progress-bar{height:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 0 12px rgba(245,158,11,0.5);}
-.sr-modal-body{padding:24px 22px;overflow-y:auto;flex:1;}
+.sr-modal-body{padding:24px 22px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:1;touch-action:pan-y;}
+.sr-modal-body::-webkit-scrollbar{width:0px;background:transparent;}
 .sr-step-title{margin:0 0 8px;font-size:19px;font-weight:600;color:#fff;letter-spacing:-0.02em;line-height:1.3;}
 .sr-step-desc{margin:0 0 20px;font-size:13px;color:rgba(255,255,255,0.55);line-height:1.5;}
 .sr-option-grid{display:flex;flex-direction:column;gap:8px;}

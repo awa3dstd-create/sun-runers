@@ -51,7 +51,7 @@ button[aria-label="Dimensiona tu sistema solar"] {
     scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    touch-action: pan-y !important;
+    
   }
   * { will-change: auto !important; }
   .group:hover, .group\/btn:hover { transform: none !important; }

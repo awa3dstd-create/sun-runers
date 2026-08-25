@@ -10,6 +10,28 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <style id="sun-runers-mobile-patch-final">/* SUN-RUNERS — Mobile Patch Final CSS */
 /* Fix botón naranja + intro más lenta (6s) + ajustes mobile */
 
@@ -63,7 +85,7 @@ button[aria-label="Dimensiona tu sistema solar"] {
     scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    touch-action: pan-y !important;
+    
   }
   * { will-change: auto !important; }
   .group:hover, .group\/btn:hover { transform: none !important; }
@@ -157,7 +179,29 @@ body {
 
 
 
-<script id="sun-runers-calc-quick">/* ════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="sr-calc-v22">/* ════════════════════════════════════════════════════════════
    SUN-RUNERS — Calculadora v3 (Awwward-quality)
    - Sin emojis, con SVG icons tipo Lucide
    - Glass morphism premium
@@ -429,29 +473,27 @@ body {
   var savedBodyOverflow = '';
   var savedBodyPaddingRight = '';
   function lockBodyScroll() {
-    if (document.body.style.overflow === 'hidden') return;
     savedBodyOverflow = document.body.style.overflow;
-    savedBodyPaddingRight = document.body.style.paddingRight;
-    var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     var scrollY = window.scrollY;
-    document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + scrollY + 'px';
     document.body.style.left = '0';
     document.body.style.right = '0';
     document.body.style.width = '100%';
-    if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + 'px';
+    document.body.style.overflowY = 'scroll';
   }
   function unlockBodyScroll() {
     var scrollY = document.body.style.top;
-    document.body.style.overflow = savedBodyOverflow || '';
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
     document.body.style.width = '';
-    document.body.style.paddingRight = savedBodyPaddingRight || '';
-    if (scrollY) { window.scrollTo(0, parseInt(scrollY || '0') * -1); }
+    document.body.style.overflowY = '';
+    document.body.style.overflow = savedBodyOverflow || '';
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
   }
 
   /* === Render del modal === */
@@ -493,7 +535,7 @@ body {
     c += '<div class="sr-modal-progress"><div class="sr-modal-progress-bar" style="width:' + ((state.step + 1) / 7 * 100) + '%"></div></div>';
 
     // Body
-    c += '<div class="sr-modal-body">';
+    c += '<div class="sr-modal-body" onwheel="event.stopPropagation()">';
 
     if (state.step === 0) {
       c += '<h3 class="sr-step-title">¿Dónde vas a instalar el sistema?</h3>';
@@ -808,7 +850,7 @@ body {
       style.id = 'sr-calc-styles';
       style.textContent = `
 #sr-calc-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
-.sr-modal-inner{background:rgba(15,16,12,0.96);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.08);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px -10px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04);}
+.sr-modal-inner{background:rgba(15,16,12,0.96);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.08);border-radius:18px;display:flex;flex-direction:column;box-shadow:0 30px 80px -10px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04);max-height:inherit;overflow:hidden;}
 .sr-modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.06);background:linear-gradient(135deg,rgba(245,158,11,0.08) 0%,transparent 50%);}
 .sr-modal-header-content{display:flex;align-items:center;gap:14px;}
 .sr-modal-icon{width:38px;height:38px;border-radius:10px;background:rgba(245,158,11,0.12);display:flex;align-items:center;justify-content:center;color:#fbbf24;border:1px solid rgba(245,158,11,0.2);}
@@ -818,7 +860,8 @@ body {
 .sr-modal-close:hover{background:rgba(255,255,255,0.1);color:#fff;}
 .sr-modal-progress{height:2px;background:rgba(255,255,255,0.05);overflow:hidden;}
 .sr-modal-progress-bar{height:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 0 12px rgba(245,158,11,0.5);}
-.sr-modal-body{padding:24px 22px;overflow-y:auto;flex:1;}
+.sr-modal-body{padding:24px 22px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:1;min-height:0;}
+.sr-modal-body::-webkit-scrollbar{width:0px;background:transparent;}
 .sr-step-title{margin:0 0 8px;font-size:19px;font-weight:600;color:#fff;letter-spacing:-0.02em;line-height:1.3;}
 .sr-step-desc{margin:0 0 20px;font-size:13px;color:rgba(255,255,255,0.55);line-height:1.5;}
 .sr-option-grid{display:flex;flex-direction:column;gap:8px;}
@@ -932,7 +975,7 @@ body {
         api.open();
         return false;
       }
-    }, true);
+    }, false);
 
     // También capturar pointerdown para prevenir animaciones de framer-motion
     document.addEventListener('pointerdown', function(e) {
@@ -940,7 +983,7 @@ body {
         e.preventDefault();
         e.stopPropagation();
       }
-    }, true);
+    }, false);
 
     // Y touchstart para móvil
     document.addEventListener('touchstart', function(e) {
@@ -949,7 +992,7 @@ body {
         e.stopPropagation();
         api.open();
       }
-    }, { capture: true, passive: false });
+    }, { passive: false });
 
     // Reemplazar handler del botón flotante (fallback si event delegation no alcanza)
     function replaceFloatingButton() {
@@ -961,7 +1004,7 @@ body {
           e.preventDefault();
           e.stopPropagation();
           api.open();
-        }, { capture: true });
+        }, false);
       }
     }
     var btnObserver = new MutationObserver(function() { replaceFloatingButton(); });
@@ -972,10 +1015,28 @@ body {
     // Iniciar texto rotatorio
     setTimeout(startRotatingText, 1500);
 
-    document.addEventListener('wheel', function(e) { if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); } }, { passive: false });
-    document.addEventListener('touchmove', function(e) { if (state.open && !e.target.closest('#sr-calc-modal')) { e.preventDefault(); } }, { passive: false });
-    document.addEventListener('keydown', function(e) { if (state.open && [32,33,34,35,36,37,38,39,40].indexOf(e.keyCode) !== -1) { if (!e.target.closest('#sr-calc-modal')) { e.preventDefault(); } } });
-    console.log('[SR v3] Calculadora lista con scroll lock');
+
+    // Bloquear scroll de la web cuando modal abierto
+    // SOLO prevenir si el target NO está dentro del modal-body
+    // Bloquear scroll de la web (fuera del modal)
+    // Usar capture phase para interceptar ANTES de que llegue al modal
+    document.addEventListener('wheel', function(e) {
+      if (!state.open) return;
+      if (e.target.closest('#sr-calc-modal')) {
+        // El evento está dentro del modal - NO prevenir, dejar que el navegador haga scroll nativo
+        return;
+      }
+      // El evento está fuera del modal - prevenir scroll de la web
+      e.preventDefault();
+    }, { passive: false, capture: false });
+
+    document.addEventListener('touchmove', function(e) {
+      if (!state.open) return;
+      if (e.target.closest('#sr-calc-modal')) return;
+      e.preventDefault();
+    }, { passive: false });
+
+    console.log('[SR v3] Calculadora lista con scroll');
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
