@@ -1289,3 +1289,25 @@ Stage Summary:
 - ✅ 3 imágenes de portfolio reales sin personas ni watermarks
 - ✅ QA completo: 0 errores encontrados
 - ✅ Deployment: https://sun-runers.pages.dev (f88050a7)
+
+---
+Task ID: 36
+Agent: main (Super Z)
+Task: v7 — Nueva imagen p6 (tablero real del usuario) + descripción + ubicación Mariel
+
+Work Log:
+- Usuario proporcionó imagen real de tablero principal (IMG-20260823-WA0012.jpg)
+- Imagen optimizada: 810x1080 → 53KB JPEG progressive
+- VLM verificó: tablero con medidores duales (113V/110V), breakers CHINT y THC, caja MOLLOM con LED verde, sin personas, sin watermark
+- Cambios en HTML:
+  * Título: "Tablero principal residencial" → "Tablero principal con transferencia automática"
+  * Ubicación: "Mayabeque" → "Mariel, Artemisa"
+  * Descripción: "Tablero principal con diferencial 40 A, 18 circuitos termomagnéticos, sistema de puesta a tierra y etiquetado completo." → "Tablero principal con medidores duales (113V/110V), breakers CHINT y THC, caja de distribución MOLLOM con indicador LED y transferencia automática entre red y sistema solar."
+- Deploy exitoso: https://sun-runers.pages.dev (deployment 9f2a9cf2)
+- Verificado en producción: texto del card p6 confirmado con título, ubicación y descripción correctos
+
+Stage Summary:
+- ✅ Imagen p6 reemplazada con foto real del usuario (tablero con transferencia)
+- ✅ Título actualizado: "Tablero principal con transferencia automática"
+- ✅ Ubicación actualizada: "Mariel, Artemisa"
+- ✅ Descripción actualizada con detalles técnicos de la imagen real
