@@ -1311,3 +1311,38 @@ Stage Summary:
 - ✅ Título actualizado: "Tablero principal con transferencia automática"
 - ✅ Ubicación actualizada: "Mariel, Artemisa"
 - ✅ Descripción actualizada con detalles técnicos de la imagen real
+
+---
+Task ID: 37
+Agent: main (Super Z)
+Task: Botón verde WhatsApp + imagen Sunshine + depuración ZIP + sync GitHub Pages
+
+Work Log:
+- Botón verde flotante de WhatsApp cambiado:
+  * Antes: chat.whatsapp.com/BcDhBvmCmNM3dFZM97NNQL (grupo)
+  * Ahora: wa.me/5358477069 (chat directo con +5358477069)
+  * Cambio aplicado en JS chunk d52d978009428f4e.js
+- Imagen de Sunshine reemplazada en sección Tecnologías:
+  * Imagen anterior: 215KB (vieja del repo)
+  * Nueva imagen: 57KB (Sunshine Solar visible en packaging + panel solar)
+  * VLM confirmó: "Sunshine is visible on the packaging, product shown is a solar panel"
+- GitHub Pages arreglado:
+  * Problema: HTML usaba rutas absolutas /_next/ que no funcionan en /sun-runers/
+  * Fix: rutas cambiadas a /sun-runers/_next/ y /sun-runers/assets/
+  * Auto-failover JS añadido: redirige a pages.dev si responde
+- ZIP depurado:
+  * Antes: 849MB → 34MB (ZIP)
+  * Después: 15MB → 11MB (ZIP)
+  * Eliminado: .venv-faceswap (590MB), .git (220MB), screenshots PNG (15MB), tests, bun.lock, Caddyfile, .zscripts
+- API Pages Functions restaurada:
+  * /api/health devuelve JSON (no HTML)
+  * hasApiKey:true, hasTelegram:true, hasCallmebot:true, allConfigured:true
+- 3 plataformas homogéneas (mismo hash MD5 en las 3)
+
+Stage Summary:
+- ✅ Botón verde WhatsApp → wa.me/5358477069 (chat directo)
+- ✅ Sunshine.jpg corregida (57KB, marca visible)
+- ✅ GitHub Pages funcionando con rutas relativas
+- ✅ ZIP depurado: 11MB (de 34MB)
+- ✅ API restaurada con Brevo + Telegram + CallMeBot
+- ✅ 3 plataformas homogéneas
